@@ -6,8 +6,7 @@ using UnityEngine.UIElements;
 [CreateAssetMenu(menuName = "Game/CardData")]
 public class CardData : ScriptableObject
 {
-    public string powerUp;
-    public string shortCutKey;
+    public string cardName;
     public string description;
     public GameObject icon;
 }

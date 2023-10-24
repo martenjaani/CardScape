@@ -1,18 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public CardData cardData;
+    public TextMeshProUGUI cardName;
+
+    private AvaibleCardsScript cardsScript;
+
+    private void Awake()
     {
-        
+        cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et pärast selle kaardi hävimist
+                                                                           //see kaart listist eemaldada
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        cardName.text = cardData.cardName;
+    }
+
+    public void Pressed()
+    {
+        if(cardName.text.Equals("Double Jump"))
+            Events.DoubleJump();
+        cardsScript.RemoveCard(gameObject);
+        Destroy(gameObject);
     }
 }

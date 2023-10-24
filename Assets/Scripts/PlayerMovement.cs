@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed = 1f;
     public float gravityMultiplier = 1f;
     public float jumpPower = 1f;
+    public float jumpPowerMultiplierOnCardActivation = 2f;
 
     private float horizontalMovement;
     private bool facingRight = true;
@@ -28,6 +29,13 @@ public class PlayerMovement : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
 
         rb.gravityScale = gravityMultiplier;
+
+        Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
+    }
+
+    private void OnDestroy()
+    {
+        Events.DoubleJumpCardActivated -= jump;
     }
 
     void Update()
@@ -46,8 +54,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump") && onGround())    // Kui vajutad hüppamist ja oled maas, siis hüppad.
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-            animator.SetBool("isJumping", true);
+            jump(false);
         }
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)     // Kui lased varem lahti on hüpe nõrgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
         {
@@ -66,6 +73,19 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = gravityMultiplier;
             animator.SetBool("isFalling", false);
         }
+    }
+
+    private void jump(bool cardActivation)
+    {
+        if (cardActivation)
+            jumpPower *= jumpPowerMultiplierOnCardActivation; //Jumplogic kasutab seda et kas space hoitakse all või mitte, mis siis on vaja jumppowerit tõsta et ta kõrgemale hüppaks
+                                                              //kaardi aktiveerimisel
+
+        rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        animator.SetBool("isJumping", true);
+
+        if (cardActivation)
+            jumpPower /= jumpPowerMultiplierOnCardActivation;
     }
 
     private void movementLogic()     // Movement loogika
