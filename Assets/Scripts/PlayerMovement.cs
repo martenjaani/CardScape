@@ -13,6 +13,11 @@ public class PlayerMovement : MonoBehaviour
     public float jumpPower = 1f;
     public float jumpPowerMultiplierOnCardActivation = 2f;
 
+    public float dashSpeed = 10f;
+    public float dashDuration = 1.5f; // Duration of the dash in seconds
+    private bool isDashing = false;
+
+
     private float horizontalMovement;
     private bool facingRight = true;
     private float speed;
@@ -31,11 +36,13 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityMultiplier;
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
+        Events.DashCardActivated += dash;
     }
 
     private void OnDestroy()
     {
         Events.DoubleJumpCardActivated -= jump;
+        Events.DashCardActivated -= dash;
     }
 
     void Update()
@@ -45,6 +52,8 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(speed, rb.velocity.y);        // Liigutame uute asukohta
 
         jumpLogic();        // Hüppamise loogika siin sees
+
+        dashLogic();
 
         switchSides();              // Muudame liikumise suunda kui tarvis.
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // Pöörame ümber vastavalt facingRight booleanile.
@@ -86,6 +95,31 @@ public class PlayerMovement : MonoBehaviour
 
         if (cardActivation)
             jumpPower /= jumpPowerMultiplierOnCardActivation;
+    }
+
+    private void dash(bool cardActivation)
+    {
+        if (cardActivation) isDashing=true;
+    }
+    private void dashLogic()
+    {
+        if (isDashing)
+        {
+            
+            rb.gravityScale = 0;
+            if(facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement
+            else rb.velocity = new Vector2(-dashSpeed, 0);
+            horizontalMovement = 0;
+            Invoke("StopDashing", dashDuration);
+        }
+        
+    }
+
+    private void StopDashing()
+    {
+        isDashing = false;
+        rb.gravityScale = gravityMultiplier;
+        rb.velocity = Vector2.zero;
     }
 
     private void movementLogic()     // Movement loogika

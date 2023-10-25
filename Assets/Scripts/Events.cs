@@ -7,4 +7,10 @@ public class Events
 {
     public static event Action<bool> DoubleJumpCardActivated;
     public static void DoubleJump() => DoubleJumpCardActivated?.Invoke(true);
+
+    public static event Action<bool> DashCardActivated;
+    public static void Dash() => DashCardActivated?.Invoke(true);
+
+    public static event Action OnRestartLevel;
+    public static void StartLevel() => OnRestartLevel?.Invoke();
 }

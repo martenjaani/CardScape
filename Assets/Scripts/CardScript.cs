@@ -24,8 +24,11 @@ public class CardScript : MonoBehaviour
 
     public void Pressed()
     {
-        if(cardName.text.Equals("Double Jump"))
-            Events.DoubleJump();
+        if(cardName.text.Equals("Double Jump")) Events.DoubleJump();
+        
+
+        if (cardName.text.Equals("Dash")) Events.Dash();
+        
         cardsScript.RemoveCard(gameObject);
         Destroy(gameObject);
     }
