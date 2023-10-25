@@ -105,7 +105,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            
+            animator.SetBool("isFalling", true);
+
             rb.gravityScale = 0;
             if(facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-dashSpeed, 0);
@@ -117,6 +118,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StopDashing()
     {
+        animator.SetBool("isFalling", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
         rb.velocity = Vector2.zero;
