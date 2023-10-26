@@ -121,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isFalling", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
-        rb.velocity = Vector2.zero;
+        
     }
 
     private void movementLogic()     // Movement loogika
