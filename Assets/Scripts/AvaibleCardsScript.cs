@@ -26,6 +26,18 @@ public class AvaibleCardsScript : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.E)) //Kui vajutab Q siis võtab listist esimese kaardi ning aktiveerib selles oleva Pressed funktsiooni.
+        {
+            if (Cards.Count > 1)
+            {
+                CardScript card = Cards[1].GetComponent<CardScript>();
+                if (card != null)
+                {
+                    card.Pressed();
+                }
+            }
+        }
     }
 
     public void AddNewCard() //Hiljem kui kaarte juurde lisada
