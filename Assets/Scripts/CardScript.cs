@@ -43,7 +43,7 @@ public class CardScript : MonoBehaviour
 
         if (cardName.text.Equals("Dash")) Events.Dash();
         
-        cardsScript.RemoveCard(gameObject);
-        Destroy(gameObject);
+        //cardsScript.RemoveCard(gameObject);
+        //Destroy(gameObject);
     }
 }
