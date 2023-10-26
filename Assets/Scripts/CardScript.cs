@@ -11,6 +11,8 @@ public class CardScript : MonoBehaviour
 
     private AvaibleCardsScript cardsScript;
 
+    private PlayerMovement playerMovement;
+
     private void Awake()
     {
         cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et pärast selle kaardi hävimist
@@ -24,8 +26,20 @@ public class CardScript : MonoBehaviour
 
     public void Pressed()
     {
-        if(cardName.text.Equals("Double Jump")) Events.DoubleJump();
-        
+        if (cardName.text.Equals("Double Jump"))
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+                if (!playerMovement.onGround() && !playerMovement.ActivatedDoubleJump)
+                    Events.DoubleJump();
+                else
+                    return;
+            }
+            else
+                return;
+        }
 
         if (cardName.text.Equals("Dash")) Events.Dash();
         

@@ -18,6 +18,12 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
 
+    private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti või mitte.
+    public bool ActivatedDoubleJump
+    {
+        get { return activatedDoubleJump; }
+        set { activatedDoubleJump = value; }
+    }
 
     private float horizontalMovement;
     private bool facingRight = true;
@@ -35,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         collider = GetComponent<BoxCollider2D>();
 
         rb.gravityScale = gravityMultiplier;
+        ActivatedDoubleJump = false;
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
         Events.DashCardActivated += dash;
@@ -88,8 +95,12 @@ public class PlayerMovement : MonoBehaviour
     private void jump(bool cardActivation)
     {
         if (cardActivation)
+        {
             jumpPower *= jumpPowerMultiplierOnCardActivation; //Jumplogic kasutab seda et kas space hoitakse all või mitte, mis siis on vaja jumppowerit tõsta et ta kõrgemale hüppaks
                                                               //kaardi aktiveerimisel
+            ActivatedDoubleJump = true;
+            StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i pärast double jump aktiveerimist.
+        }
 
         rb.velocity = new Vector2(rb.velocity.x, jumpPower);
         animator.SetBool("isJumping", true);
@@ -155,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private bool onGround() // Kontrollib,  kas tegelane on maa peal
+    public bool onGround() // Kontrollib,  kas tegelane on maa peal
     {
         return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, Ground);
     }
@@ -171,6 +182,13 @@ public class PlayerMovement : MonoBehaviour
             facingRight = false;
         }
     }
- 
 
+    public IEnumerator CheckUntilPlayerOnGroundAfterDoubleJump() //Pärast double jumpi aktiveerib selle ning loopib kuni uuesti maas ning ss saab uuesti hiljem double jump'ida
+    {
+        while (ActivatedDoubleJump)
+        {
+            ActivatedDoubleJump = !onGround();
+            yield return null;
+        }
+    }
 }
