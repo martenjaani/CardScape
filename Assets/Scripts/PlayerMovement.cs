@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -170,4 +171,6 @@ public class PlayerMovement : MonoBehaviour
             facingRight = false;
         }
     }
+ 
+
 }

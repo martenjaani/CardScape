@@ -12,5 +12,5 @@ public class Events
     public static void Dash() => DashCardActivated?.Invoke(true);
 
     public static event Action OnRestartLevel;
-    public static void StartLevel() => OnRestartLevel?.Invoke();
+    public static void RestartLevel() => OnRestartLevel?.Invoke();
 }
