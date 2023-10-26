@@ -118,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
         if (isDashing)
         {
             animator.SetBool("isDashing", true);
-            animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei hüppa ega jookse 
+            animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei hüppa
 
             rb.gravityScale = 0;
             if(facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement

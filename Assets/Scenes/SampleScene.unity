@@ -468,7 +468,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.19202444, y: -1.49253, z: -10.01}
+  m_LocalPosition: {x: -0.17851442, y: -1.49253, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1040,7 +1040,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4481902, y: -1.4926069, z: -10.01}
+  m_LocalPosition: {x: -0.44046974, y: -1.4926069, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5796,7 +5796,7 @@ MonoBehaviour:
   maxSpeed: 7
   gravityMultiplier: 4
   jumpPower: 15
-  jumpPowerMultiplierOnCardActivation: 1.45
+  jumpPowerMultiplierOnCardActivation: 1.2
   dashSpeed: 15
   dashDuration: 0.2
   Ground:
