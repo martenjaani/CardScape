@@ -17,6 +17,10 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+    private Vector3 previousPosition;
+
+    public float ultraDashSpeed = 20f;
+    private bool isUltraDashing = false;
 
     private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti või mitte.
     public bool ActivatedDoubleJump
@@ -45,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
         Events.DashCardActivated += dash;
+        Events.UltraDashCardActivated += ultraDash;
     }
 
     private void OnDestroy()
@@ -62,6 +67,9 @@ public class PlayerMovement : MonoBehaviour
         jumpLogic();        // Hüppamise loogika siin sees
 
         dashLogic();
+
+        ultraDashLogic();
+        ultraDashCancel(isUltraDashing);
 
         switchSides();              // Muudame liikumise suunda kui tarvis.
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // Pöörame ümber vastavalt facingRight booleanile.
@@ -128,14 +136,49 @@ public class PlayerMovement : MonoBehaviour
         }
         
     }
-
     private void StopDashing()
     {
         animator.SetBool("isDashing", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
-        
+
     }
+
+    private void ultraDash(bool cardActivation)
+    {
+        if (cardActivation & !isUltraDashing) isUltraDashing = true;
+    }
+
+    private void ultraDashLogic()
+    {
+        if (isUltraDashing)
+        {
+            animator.SetBool("isDashing", true);
+            animator.SetBool("isJumping", false);
+
+            rb.gravityScale = 0;
+            if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
+            else rb.velocity = new Vector2(-ultraDashSpeed, 0);
+            horizontalMovement = 0;
+        }
+    }
+
+    private void ultraDashCancel(bool isUltraDashing)
+    {
+        if (isUltraDashing)
+        {
+            if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
+            {
+                isUltraDashing = false;
+                rb.velocity = Vector3.zero; // Stop the player when the dash is complete
+                rb.gravityScale = gravityMultiplier;
+            }
+            previousPosition = transform.position;
+        }
+    }
+   
+
+   
 
     private void movementLogic()     // Movement loogika
     {
