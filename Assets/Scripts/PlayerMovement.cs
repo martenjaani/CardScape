@@ -280,7 +280,8 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
 
         isDashing = false;
-        isUltraDashing = false; 
+        isUltraDashing = false; // no more dash kui surnud NO MORE
+        animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
 
         movementDisabled = true;
 
