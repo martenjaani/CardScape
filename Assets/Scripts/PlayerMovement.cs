@@ -157,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            animator.SetTrigger("Dash");
+            animator.SetBool("isDashing", true);
             animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei h�ppa
 
             rb.gravityScale = 0;
@@ -170,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void StopDashing()
     {
-        //animator.SetBool("isDashing", false);
+        animator.SetBool("isDashing", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
 
