@@ -26,37 +26,39 @@ public class CardScript : MonoBehaviour
 
     public void Pressed()
     {
-        if (cardName.text.Equals("Double Jump"))
+        if (!Events.GetMovementDisabled())       // Checkime kas movement on lubatud
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
+            if (cardName.text.Equals("Double Jump"))
             {
-                PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-                if (!playerMovement.onGround() && !playerMovement.ActivatedDoubleJump)
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
                 {
-                    Events.DoubleJump();
-                    Events.CardActivated(this);
+                    PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+                    if (Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump)
+                    {
+                        Events.DoubleJump();
+                        Events.CardActivated(this);
+                    }
+                    else
+                        return;
                 }
                 else
                     return;
             }
-            else
-                return;
+
+            if (cardName.text.Equals("Dash"))
+            {
+                Events.Dash();
+                Events.CardActivated(this);
+            }
+
+            if (cardName.text.Equals("Ultra Dash"))
+            {
+                Events.UltraDash();
+                Events.CardActivated(this);
+            }
+
         }
-
-        if (cardName.text.Equals("Dash"))
-        {
-            Events.Dash();
-            Events.CardActivated(this);
-        }
-
-        if (cardName.text.Equals("Ultra Dash"))
-        {
-            Events.UltraDash();
-            Events.CardActivated(this);
-        }
-
-
 
             //cardsScript.RemoveCard(gameObject);
             //Destroy(gameObject);

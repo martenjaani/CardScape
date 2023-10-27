@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+
     private bool movementDisabled = false;
     private Vector3 previousPosition;
 
@@ -52,6 +53,8 @@ public class PlayerMovement : MonoBehaviour
         Events.DashCardActivated += dash;
         Events.OnPlayerDead += setDead;
         Events.UltraDashCardActivated += ultraDash;
+        Events.OnGetMovementDisabled += getMovementDisabled;
+        Events.OnGetPlayerOnGround += onGround;
     }
 
     private void OnDestroy()
@@ -60,6 +63,8 @@ public class PlayerMovement : MonoBehaviour
         Events.DashCardActivated -= dash;
         Events.OnPlayerDead -= setDead;
         Events.UltraDashCardActivated -= ultraDash;
+        Events.OnGetMovementDisabled -= getMovementDisabled;
+        Events.OnGetPlayerOnGround -= onGround;
     }
 
     void Update()
@@ -151,7 +156,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void dash(bool cardActivation)
     {
-        if (cardActivation & !isDashing) isDashing=true;
+            if (cardActivation & !isDashing) isDashing = true;
     }
     private void dashLogic()
     {
@@ -243,7 +248,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public bool onGround() // Kontrollib,  kas tegelane on maa peal
+    private bool onGround() // Kontrollib,  kas tegelane on maa peal
     {
         return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, Ground);
     }
@@ -269,13 +274,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void setDead()
+    private void setDead()
     {
         rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
+
         isDashing = false;
+        isUltraDashing = false; 
+
         movementDisabled = true;
 
         animator.SetTrigger("Dead");
+    }
+
+    private bool getMovementDisabled()
+    {
+        return movementDisabled;
     }
 
     public void RestartLevelOnDeath()   // Selle kutsub death animation v�lja kui l�bi saab
