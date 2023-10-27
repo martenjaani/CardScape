@@ -33,6 +33,6 @@ public class GameController : MonoBehaviour
     }
     private void Restart()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

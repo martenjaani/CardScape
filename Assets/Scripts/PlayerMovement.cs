@@ -111,7 +111,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void dash(bool cardActivation)
     {
-        if (cardActivation) isDashing=true;
+        if (cardActivation & !isDashing) isDashing=true;
     }
     private void dashLogic()
     {
