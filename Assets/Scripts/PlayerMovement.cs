@@ -157,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isDashing)
         {
-            animator.SetBool("isDashing", true);
+            animator.SetTrigger("Dash");
             animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei h�ppa
 
             rb.gravityScale = 0;
@@ -170,7 +170,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void StopDashing()
     {
-        animator.SetBool("isDashing", false);
+        //animator.SetBool("isDashing", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
 
@@ -272,7 +272,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
         movementDisabled = true;
-        animator.SetBool("isDead", true);
+
+        animator.SetTrigger("Dead");
     }
 
     public void RestartLevelOnDeath()   // Selle kutsub death animation v�lja kui l�bi saab
