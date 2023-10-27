@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isUltraDashing)
         {
-            animator.SetBool("isDashing", true);
+            animator.SetTrigger("Dash");
             animator.SetBool("isJumping", false);
 
             rb.gravityScale = 0;
@@ -204,7 +204,7 @@ public class PlayerMovement : MonoBehaviour
                 isUltraDashing = false;
                 rb.velocity = Vector3.zero; // Stop the player when the dash is complete
                 rb.gravityScale = gravityMultiplier;
-                animator.SetBool("isDashing", false);
+                
             }
             previousPosition = transform.position;
         }
