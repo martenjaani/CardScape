@@ -18,8 +18,12 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
     private bool movementDisabled = false;
+    private Vector3 previousPosition;
 
-    private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti või mitte.
+    public float ultraDashSpeed = 20f;
+    private bool isUltraDashing = false;
+
+    private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti vï¿½i mitte.
     public bool ActivatedDoubleJump
     {
         get { return activatedDoubleJump; }
@@ -44,9 +48,10 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityMultiplier;
         ActivatedDoubleJump = false;
 
-        Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
+        Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hï¿½ppaks
         Events.DashCardActivated += dash;
         Events.OnPlayerDead += setDead;
+        Events.UltraDashCardActivated += ultraDash;
     }
 
     private void OnDestroy()
@@ -54,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
         Events.DoubleJumpCardActivated -= jump;
         Events.DashCardActivated -= dash;
         Events.OnPlayerDead -= setDead;
+        Events.UltraDashCardActivated -= ultraDash;
     }
 
     void Update()
@@ -62,12 +68,15 @@ public class PlayerMovement : MonoBehaviour
         movementLogic();                // Liikumise loogika siin sees
         rb.velocity = new Vector2(speed, rb.velocity.y);        // Liigutame uute asukohta
 
-        jumpLogic();        // Hüppamise loogika siin sees
+        jumpLogic();        // Hï¿½ppamise loogika siin sees
 
         dashLogic();
 
+        ultraDashLogic();
+        ultraDashCancel(isUltraDashing);
+
         switchSides();              // Muudame liikumise suunda kui tarvis.
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // Pöörame ümber vastavalt facingRight booleanile.
+        this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // Pï¿½ï¿½rame ï¿½mber vastavalt facingRight booleanile.
     }
 
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
@@ -100,23 +109,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void jumpLogic()
     {
-        if (getJumpButtonDown() && onGround())    // Kui vajutad hüppamist ja oled maas, siis hüppad.
+        if (getJumpButtonDown() && onGround())    // Kui vajutad hï¿½ppamist ja oled maas, siis hï¿½ppad.
         {
             jump(false);
         }
-        if (getJumpButtonUp() && rb.velocity.y > 0f)     // Kui lased varem lahti on hüpe nõrgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
+        if (getJumpButtonUp() && rb.velocity.y > 0f)     // Kui lased varem lahti on hï¿½pe nï¿½rgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
 
-        if (rb.velocity.y < 0f)                          // Kui hakkad hüppel kukkuma, on gravitatsioon suurem.
+        if (rb.velocity.y < 0f)                          // Kui hakkad hï¿½ppel kukkuma, on gravitatsioon suurem.
         {
             rb.gravityScale = gravityMultiplier * 1.5f;
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
         }
-        if (rb.velocity.y == 0f)                       // Kui oled maa peal. siis tagasi õigele gravitatsioonile.
+        if (rb.velocity.y == 0f)                       // Kui oled maa peal. siis tagasi ï¿½igele gravitatsioonile.
         {
             rb.gravityScale = gravityMultiplier;
             animator.SetBool("isFalling", false);
@@ -127,10 +136,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation)
         {
-            jumpPower *= jumpPowerMultiplierOnCardActivation; //Jumplogic kasutab seda et kas space hoitakse all või mitte, mis siis on vaja jumppowerit tõsta et ta kõrgemale hüppaks
+            jumpPower *= jumpPowerMultiplierOnCardActivation; //Jumplogic kasutab seda et kas space hoitakse all vï¿½i mitte, mis siis on vaja jumppowerit tï¿½sta et ta kï¿½rgemale hï¿½ppaks
                                                               //kaardi aktiveerimisel
             ActivatedDoubleJump = true;
-            StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i pärast double jump aktiveerimist.
+            StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i pï¿½rast double jump aktiveerimist.
         }
 
         rb.velocity = new Vector2(rb.velocity.x, jumpPower);
@@ -142,14 +151,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void dash(bool cardActivation)
     {
-        if (cardActivation) isDashing=true;
+        if (cardActivation & !isDashing) isDashing=true;
     }
     private void dashLogic()
     {
         if (isDashing)
         {
             animator.SetBool("isDashing", true);
-            animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei hüppa
+            animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei hï¿½ppa
 
             rb.gravityScale = 0;
             if(facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement
@@ -159,21 +168,56 @@ public class PlayerMovement : MonoBehaviour
         }
         
     }
-
     private void StopDashing()
     {
         animator.SetBool("isDashing", false);
         isDashing = false;
         rb.gravityScale = gravityMultiplier;
-        
+
     }
+
+    private void ultraDash(bool cardActivation)
+    {
+        if (cardActivation & !isUltraDashing) isUltraDashing = true;
+    }
+
+    private void ultraDashLogic()
+    {
+        if (isUltraDashing)
+        {
+            animator.SetBool("isDashing", true);
+            animator.SetBool("isJumping", false);
+
+            rb.gravityScale = 0;
+            if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
+            else rb.velocity = new Vector2(-ultraDashSpeed, 0);
+            horizontalMovement = 0;
+        }
+    }
+
+    private void ultraDashCancel(bool isUltraDashing)
+    {
+        if (isUltraDashing)
+        {
+            if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
+            {
+                isUltraDashing = false;
+                rb.velocity = Vector3.zero; // Stop the player when the dash is complete
+                rb.gravityScale = gravityMultiplier;
+            }
+            previousPosition = transform.position;
+        }
+    }
+   
+
+   
 
     private void movementLogic()     // Movement loogika
     {
-        if (horizontalMovement > 0) // Input Managerist saame teada, kas liigutakse paremale või vasakule. Tagastab kas -1, 0 või 1. Seejärel lisame kiirenduse väärtuse
+        if (horizontalMovement > 0) // Input Managerist saame teada, kas liigutakse paremale vï¿½i vasakule. Tagastab kas -1, 0 vï¿½i 1. Seejï¿½rel lisame kiirenduse vï¿½ï¿½rtuse
         {
             speed = Mathf.Clamp(rb.velocity.x + (accelerationSpeed * Time.deltaTime), -maxSpeed, maxSpeed);
-            animator.SetBool("isRunning", true);    // Paneme animation käima
+            animator.SetBool("isRunning", true);    // Paneme animation kï¿½ima
         }
         else if (horizontalMovement < 0)
         {
@@ -184,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (rb.velocity.x > 0.05f)           // Siin on aeglustamise loogika.
             {
-                speed = Mathf.Clamp(rb.velocity.x - (decelartionSpeed * Time.deltaTime), -maxSpeed, maxSpeed); // Vastavalt liikumise suunale kas lahutame või liidame decelerationspeed muutuja
+                speed = Mathf.Clamp(rb.velocity.x - (decelartionSpeed * Time.deltaTime), -maxSpeed, maxSpeed); // Vastavalt liikumise suunale kas lahutame vï¿½i liidame decelerationspeed muutuja
             }
             else if (rb.velocity.x < -0.05f)
             {
@@ -192,7 +236,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                speed = 0f;     // Kui kiirus on piisavalt lähedal nullile, sätime selle nulliks
+                speed = 0f;     // Kui kiirus on piisavalt lï¿½hedal nullile, sï¿½time selle nulliks
                 animator.SetBool("isRunning", false);
             }
         }
@@ -205,17 +249,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void switchSides()
     {
-        if (horizontalMovement > 0f)      // Kui vaatab paremale, aga liikumine on vasakule, pöörame ümber
+        if (horizontalMovement > 0f)      // Kui vaatab paremale, aga liikumine on vasakule, pï¿½ï¿½rame ï¿½mber
         {
             facingRight = true;
         } 
-        else if(horizontalMovement < 0f)  // Kui vaatab vasakule, aga liikumine on paremale, pöörame samuti ümber
+        else if(horizontalMovement < 0f)  // Kui vaatab vasakule, aga liikumine on paremale, pï¿½ï¿½rame samuti ï¿½mber
         {
             facingRight = false;
         }
     }
 
-    public IEnumerator CheckUntilPlayerOnGroundAfterDoubleJump() //Pärast double jumpi aktiveerib selle ning loopib kuni uuesti maas ning ss saab uuesti hiljem double jump'ida
+    public IEnumerator CheckUntilPlayerOnGroundAfterDoubleJump() //Pï¿½rast double jumpi aktiveerib selle ning loopib kuni uuesti maas ning ss saab uuesti hiljem double jump'ida
     {
         while (ActivatedDoubleJump)
         {
@@ -226,12 +270,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void setDead()
     {
-        rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega mängida et deathi mõnusamaks teha or something
+        rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega mï¿½ngida et deathi mï¿½nusamaks teha or something
         movementDisabled = true;
         animator.SetBool("isDead", true);
     }
 
-    public void RestartLevelOnDeath()   // Selle kutsub death animation välja kui läbi saab
+    public void RestartLevelOnDeath()   // Selle kutsub death animation vï¿½lja kui lï¿½bi saab
     {
         Events.RestartLevel();
     }

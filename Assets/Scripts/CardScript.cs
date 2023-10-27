@@ -42,6 +42,10 @@ public class CardScript : MonoBehaviour
         }
 
         if (cardName.text.Equals("Dash")) Events.Dash();
+
+        if (cardName.text.Equals("Ultra Dash")) Events.UltraDash();
+
+        
         
         //cardsScript.RemoveCard(gameObject);
         //Destroy(gameObject);
