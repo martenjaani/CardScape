@@ -195,15 +195,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void ultraDashCancel(bool isUltraDashing)
+    private void ultraDashCancel(bool isUltraDashingFunc)
     {
-        if (isUltraDashing)
+        if (isUltraDashingFunc)
         {
             if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
             {
                 isUltraDashing = false;
                 rb.velocity = Vector3.zero; // Stop the player when the dash is complete
                 rb.gravityScale = gravityMultiplier;
+                animator.SetBool("isDashing", false);
             }
             previousPosition = transform.position;
         }
