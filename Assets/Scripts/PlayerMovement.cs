@@ -185,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isUltraDashing)
         {
-            animator.SetTrigger("Dash");
+            animator.SetBool("isDashing", true);
             animator.SetBool("isJumping", false);
 
             rb.gravityScale = 0;
