@@ -5,6 +5,9 @@ using System;
 
 public class Events
 {
+    public static event Action<CardScript> cardActivated;
+    public static void CardActivated(CardScript script) => cardActivated?.Invoke(script);
+
     public static event Action<bool> DoubleJumpCardActivated;
     public static void DoubleJump() => DoubleJumpCardActivated?.Invoke(true);
 
