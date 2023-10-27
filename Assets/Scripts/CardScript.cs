@@ -34,7 +34,7 @@ public class CardScript : MonoBehaviour
                 if (player != null)
                 {
                     PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-                    if (Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump)
+                    if (!Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump)
                     {
                         Events.DoubleJump();
                         Events.CardActivated(this);
