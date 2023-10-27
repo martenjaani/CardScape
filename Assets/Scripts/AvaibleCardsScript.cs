@@ -76,7 +76,7 @@ public class AvaibleCardsScript : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) //Kui vajutab Q siis võtab listist esimese kaardi ning aktiveerib selles oleva Pressed funktsiooni.
+        if (Input.GetKeyDown(KeyCode.E)) //Kui vajutab E siis võtab listist esimese kaardi ning aktiveerib selles oleva Pressed funktsiooni.
         {
             if (amountOfSecondCards > 0)
             {

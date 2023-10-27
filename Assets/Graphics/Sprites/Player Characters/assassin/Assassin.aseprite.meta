@@ -1241,7 +1241,7 @@ ScriptedImporter:
     uvTransform: {x: 56, y: 292}
   - name: Assassin_Frame_56
     originalName: 
-    pivot: {x: 1.6739131, y: 0}
+    pivot: {x: 0.39130434, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1261,7 +1261,7 @@ ScriptedImporter:
     uvTransform: {x: 101, y: 81}
   - name: Assassin_Frame_57
     originalName: 
-    pivot: {x: 1.5961539, y: 0.0625}
+    pivot: {x: 0.46153846, y: 0.0625}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1281,7 +1281,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 96}
   - name: Assassin_Frame_58
     originalName: 
-    pivot: {x: 1.574074, y: 0.06666666}
+    pivot: {x: 0.4814815, y: 0.06666666}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1301,7 +1301,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 194}
   - name: Assassin_Frame_59
     originalName: 
-    pivot: {x: 1.5535715, y: 0.083333336}
+    pivot: {x: 0.4642857, y: 0.083333336}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1321,7 +1321,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 411}
   - name: Assassin_Frame_60
     originalName: 
-    pivot: {x: 1.5535715, y: 0.11111111}
+    pivot: {x: 0.39285713, y: 0.11111111}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1341,7 +1341,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 448}
   - name: Assassin_Frame_61
     originalName: 
-    pivot: {x: 1.5344828, y: 0.11111111}
+    pivot: {x: 0.41379312, y: 0.11111111}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1361,7 +1361,7 @@ ScriptedImporter:
     uvTransform: {x: 132, y: 431}
   - name: Assassin_Frame_62
     originalName: 
-    pivot: {x: 1.5166667, y: 0.11111111}
+    pivot: {x: 0.4, y: 0.11111111}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
@@ -1381,7 +1381,7 @@ ScriptedImporter:
     uvTransform: {x: 169, y: 27}
   - name: Assassin_Frame_63
     originalName: 
-    pivot: {x: 1.5961539, y: 0.11111111}
+    pivot: {x: 0.3846154, y: 0.11111111}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:

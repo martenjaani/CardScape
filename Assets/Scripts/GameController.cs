@@ -21,7 +21,6 @@ public class GameController : MonoBehaviour
         
     }
 
-   
 
     // Update is called once per frame
     void Update()
@@ -31,8 +30,8 @@ public class GameController : MonoBehaviour
             Restart();
         }
     }
-    private void Restart()
+    private void Restart()  // Läbi death animationi tuleme siia.
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

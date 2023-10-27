@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+    private bool movementDisabled = false;
 
     private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti või mitte.
     public bool ActivatedDoubleJump
@@ -45,17 +46,19 @@ public class PlayerMovement : MonoBehaviour
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta hüppaks
         Events.DashCardActivated += dash;
+        Events.OnPlayerDead += setDead;
     }
 
     private void OnDestroy()
     {
         Events.DoubleJumpCardActivated -= jump;
         Events.DashCardActivated -= dash;
+        Events.OnPlayerDead -= setDead;
     }
 
     void Update()
     {
-        horizontalMovement = Input.GetAxisRaw("Horizontal");    
+        horizontalMovement = getMovementInput();    
         movementLogic();                // Liikumise loogika siin sees
         rb.velocity = new Vector2(speed, rb.velocity.y);        // Liigutame uute asukohta
 
@@ -67,13 +70,41 @@ public class PlayerMovement : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // Pöörame ümber vastavalt facingRight booleanile.
     }
 
+    private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
+    {
+        if (movementDisabled)
+        {
+            return false;
+        }
+        return Input.GetButtonDown("Jump");
+    }
+
+    private bool getJumpButtonUp()
+    {
+        if (movementDisabled)
+        {
+            return false;
+        }
+        return Input.GetButtonUp("Jump");
+    }
+
+    private float getMovementInput()
+    {
+        if (movementDisabled)
+        {
+            return 0f;
+        }
+        return Input.GetAxisRaw("Horizontal");
+    }
+
+
     private void jumpLogic()
     {
-        if (Input.GetButtonDown("Jump") && onGround())    // Kui vajutad hüppamist ja oled maas, siis hüppad.
+        if (getJumpButtonDown() && onGround())    // Kui vajutad hüppamist ja oled maas, siis hüppad.
         {
             jump(false);
         }
-        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)     // Kui lased varem lahti on hüpe nõrgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
+        if (getJumpButtonUp() && rb.velocity.y > 0f)     // Kui lased varem lahti on hüpe nõrgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
@@ -191,5 +222,17 @@ public class PlayerMovement : MonoBehaviour
             ActivatedDoubleJump = !onGround();
             yield return null;
         }
+    }
+
+    public void setDead()
+    {
+        rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega mängida et deathi mõnusamaks teha or something
+        movementDisabled = true;
+        animator.SetBool("isDead", true);
+    }
+
+    public void RestartLevelOnDeath()   // Selle kutsub death animation välja kui läbi saab
+    {
+        Events.RestartLevel();
     }
 }

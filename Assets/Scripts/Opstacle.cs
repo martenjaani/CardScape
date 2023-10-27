@@ -21,7 +21,7 @@ public class Opstacle : MonoBehaviour
         PlayerMovement player = collision.GetComponent<PlayerMovement>();
         if (player != null)
         {
-            Events.RestartLevel();
+            Events.PlayerDead();    // Sätime mängija surnuks. 
         }
     }
 
