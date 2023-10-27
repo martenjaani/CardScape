@@ -33,7 +33,10 @@ public class CardScript : MonoBehaviour
             {
                 PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
                 if (!playerMovement.onGround() && !playerMovement.ActivatedDoubleJump)
+                {
                     Events.DoubleJump();
+                    Events.CardActivated(this);
+                }
                 else
                     return;
             }
@@ -41,13 +44,21 @@ public class CardScript : MonoBehaviour
                 return;
         }
 
-        if (cardName.text.Equals("Dash")) Events.Dash();
+        if (cardName.text.Equals("Dash"))
+        {
+            Events.Dash();
+            Events.CardActivated(this);
+        }
 
-        if (cardName.text.Equals("Ultra Dash")) Events.UltraDash();
+        if (cardName.text.Equals("Ultra Dash"))
+        {
+            Events.UltraDash();
+            Events.CardActivated(this);
+        }
 
-        
-        
-        //cardsScript.RemoveCard(gameObject);
-        //Destroy(gameObject);
-    }
+
+
+            //cardsScript.RemoveCard(gameObject);
+            //Destroy(gameObject);
+        }
 }

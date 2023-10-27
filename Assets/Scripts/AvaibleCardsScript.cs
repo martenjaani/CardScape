@@ -6,103 +6,81 @@ using UnityEngine.UIElements;
 
 public class AvaibleCardsScript : MonoBehaviour
 {
-    List<RectTransform> CardPacks = new List<RectTransform>();
+    List<GameObject> CardPackObjects = new List<GameObject>();
     List<CardScript> Cards = new List<CardScript>();
+    List<KeyCode> KeyCodes = new List<KeyCode>();
+    List<int> amountOfCards = new List<int>();
 
     public CardScript CardPrefab;
+    public GameObject CardPackPrefab;
 
-    private int amountOfFirstCards = 3;
-    private int amountOfSecondCards = 2;
+    public List<CardPack> CardPacks = new List<CardPack>();
 
-    public CardData FirstCardData;
-    public CardData SecondCardData;
+    private void Awake()
+    {
+        Events.cardActivated += CardActivated;
+    }
+
+    private void OnDestroy()
+    {
+        Events.cardActivated -= CardActivated;
+    }
 
     void Start()
     {
-        foreach (RectTransform cardPacks in transform) //Lisab kõik hetkel selle küljes olevad kaardid listi
-        {
-            CardPacks.Add(cardPacks);
-        }
+        RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(5 * (CardPacks.Count + 1) + 70 * CardPacks.Count, 130);
 
-        if (CardPacks.Count == 2)
+        for (int i = 0; i < CardPacks.Count; i++)
         {
-            RectTransform cardPack = CardPacks[0];
-            TextMeshProUGUI[] texts = cardPack.GetComponentsInChildren<TextMeshProUGUI>();
-            texts[0].text = "Q";
-            texts[1].text = amountOfFirstCards.ToString();
-            CardScript card = Instantiate(CardPrefab, CardPacks[0]);
-            Cards.Add(card);
-            card.cardData = FirstCardData;
-
-            RectTransform cardPack2 = CardPacks[1];
-            TextMeshProUGUI[] texts2 = cardPack2.GetComponentsInChildren<TextMeshProUGUI>();
-            texts2[0].text = "E";
-            texts2[1].text = amountOfSecondCards.ToString();
-            CardScript card2 = Instantiate(CardPrefab, CardPacks[1]);
-            Cards.Add(card2);
-            card2.cardData = SecondCardData;
+            CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
+            TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
+            texts[0].text = CardPacks[i].keyCode.ToString();
+            texts[1].text = CardPacks[i].amountOfCards.ToString();
+            Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
+            Cards[i].cardData = CardPacks[i].cardData;
+            KeyCodes.Add(CardPacks[i].keyCode);
+            amountOfCards.Add(CardPacks[i].amountOfCards);
         }
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) //Kui vajutab Q siis võtab listist esimese kaardi ning aktiveerib selles oleva Pressed funktsiooni.
+        foreach (KeyCode keyCode in KeyCodes)
         {
-            if(amountOfFirstCards > 0)
+            if (Input.GetKeyDown(keyCode))
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-                    if (!playerMovement.onGround() && !playerMovement.ActivatedDoubleJump)
-                    {
-                        Cards[0].Pressed();
-                        amountOfFirstCards--;
-                        TextMeshProUGUI[] texts = CardPacks[0].GetComponentsInChildren<TextMeshProUGUI>();
-                        texts[1].text = amountOfFirstCards.ToString();
-                        if (amountOfFirstCards == 0)
-                        {
-                            foreach (RectTransform elements in CardPacks[0]) //Lisab kõik hetkel selle küljes olevad kaardid listi
-                            {
-                                Destroy(elements.gameObject);
-                            }
-                        }
-                    }
-                    else
-                        return;
-                }
-                else
-                    return;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.E)) //Kui vajutab Q siis võtab listist esimese kaardi ning aktiveerib selles oleva Pressed funktsiooni.
-        {
-            if (amountOfSecondCards > 0)
-            {
-                Cards[1].Pressed();
-                amountOfSecondCards--;
-                TextMeshProUGUI[] texts = CardPacks[1].GetComponentsInChildren<TextMeshProUGUI>();
-                texts[1].text = amountOfSecondCards.ToString();
-                if (amountOfSecondCards == 0)
-                {
-                    foreach (RectTransform elements in CardPacks[1]) //Lisab kõik hetkel selle küljes olevad kaardid listi
-                    {
-                        Destroy(elements.gameObject);
-                    }
-                }
+                int i = KeyCodes.IndexOf(keyCode);
+                if (amountOfCards[i] > 0)
+                    Cards[i].Pressed();
             }
         }
     }
 
-    public void AddNewCard() //Hiljem kui kaarte juurde lisada
+    public void CardActivated(CardScript script)
     {
-
+        int i = Cards.IndexOf(script);
+        amountOfCards[i]--;
+        TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
+        texts[1].text = amountOfCards[i].ToString();
+        if (amountOfCards[i] == 0)
+            RemoveEachElement(CardPackObjects[i]);
     }
 
-    public void RemoveCard(GameObject card)
+    private void RemoveEachElement(GameObject cardPackObject)
     {
-        RectTransform cardRect = card.GetComponent<RectTransform>();
-        CardPacks.Remove(cardRect);
+        RectTransform rectTransform = cardPackObject.GetComponent<RectTransform>();
+        foreach(RectTransform transform in rectTransform)
+        {
+            Destroy(transform.gameObject);
+        }
     }
+}
+
+[System.Serializable]
+public class CardPack
+{
+    public CardData cardData;
+    public int amountOfCards;
+    public KeyCode keyCode;
 }
