@@ -272,6 +272,7 @@ public class PlayerMovement : MonoBehaviour
     public void setDead()
     {
         rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
+        isDashing = false;
         movementDisabled = true;
 
         animator.SetTrigger("Dead");
