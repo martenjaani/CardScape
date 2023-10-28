@@ -35,4 +35,7 @@ public class Events
 
     public static event Func<bool> OnGetPlayerOnGround;
     public static bool GetPlayerOnGround() => OnGetPlayerOnGround?.Invoke() ?? false;
+
+    public static event Action OnFinishLevel;
+    public static void FinishLevel() => OnFinishLevel?.Invoke();
 }
