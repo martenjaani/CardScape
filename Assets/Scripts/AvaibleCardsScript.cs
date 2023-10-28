@@ -36,7 +36,7 @@ public class AvaibleCardsScript : MonoBehaviour
             CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
             TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
             texts[0].text = CardPacks[i].keyCode.ToString();
-            texts[1].text = CardPacks[i].amountOfCards.ToString();
+            texts[1].text = CardPacks[i].amountOfCards.ToString() + "x";
             Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
             Cards[i].cardData = CardPacks[i].cardData;
             KeyCodes.Add(CardPacks[i].keyCode);
@@ -62,7 +62,7 @@ public class AvaibleCardsScript : MonoBehaviour
         int i = Cards.IndexOf(script);
         amountOfCards[i]--;
         TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
-        texts[1].text = amountOfCards[i].ToString();
+        texts[1].text = amountOfCards[i].ToString()+"x";
         if (amountOfCards[i] == 0)
             RemoveEachElement(CardPackObjects[i]);
     }
