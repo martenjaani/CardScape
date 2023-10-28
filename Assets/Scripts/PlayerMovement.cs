@@ -157,7 +157,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void dash(bool cardActivation)
     {
-            if (cardActivation & !isDashing) isDashing = true;
+        if (cardActivation & !isDashing)
+        {
+            isDashing = true;
+            CancelInvoke("StopDashing");
+        }
     }
     private void dashLogic()
     {
