@@ -55,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         Events.UltraDashCardActivated += ultraDash;
         Events.OnGetMovementDisabled += getMovementDisabled;
         Events.OnGetPlayerOnGround += onGround;
+        Events.OnSetMovementDisabled += setMovementDisabled;
     }
 
     private void OnDestroy()
@@ -65,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
         Events.UltraDashCardActivated -= ultraDash;
         Events.OnGetMovementDisabled -= getMovementDisabled;
         Events.OnGetPlayerOnGround -= onGround;
+        Events.OnSetMovementDisabled -= setMovementDisabled;
     }
 
     void Update()
@@ -78,7 +80,6 @@ public class PlayerMovement : MonoBehaviour
         dashLogic();
 
         ultraDashLogic();
-        ultraDashCancel(isUltraDashing);
 
         switchSides();              // Muudame liikumise suunda kui tarvis.
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
@@ -86,7 +87,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
     {
-        if (movementDisabled)
+        if (getMovementDisabled())
         {
             return false;
         }
@@ -104,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float getMovementInput()
     {
-        if (movementDisabled)
+        if (getMovementDisabled())
         {
             return 0f;
         }
@@ -197,14 +198,15 @@ public class PlayerMovement : MonoBehaviour
             if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-ultraDashSpeed, 0);
             horizontalMovement = 0;
-        }
+            ultraDashCancel();
+        } 
     }
 
-    private void ultraDashCancel(bool isUltraDashingFunc)
+    private void ultraDashCancel()
     {
-        if (isUltraDashingFunc)
-        {
-            if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
+        StartCoroutine(CheckPosition());
+
+        if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
             {
                 isUltraDashing = false;
                 rb.velocity = Vector3.zero; // Stop the player when the dash is complete
@@ -212,12 +214,21 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("isDashing", false);
 
             }
+            
+        
+    }
+
+    private IEnumerator CheckPosition()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.2f);
             previousPosition = transform.position;
         }
     }
-   
 
-   
+
+
 
     private void movementLogic()     // Movement loogika
     {
@@ -283,7 +294,7 @@ public class PlayerMovement : MonoBehaviour
         isUltraDashing = false; // no more dash kui surnud NO MORE
         animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
 
-        movementDisabled = true;
+        setMovementDisabled(true);
 
         animator.SetTrigger("Dead");
     }
@@ -291,6 +302,11 @@ public class PlayerMovement : MonoBehaviour
     private bool getMovementDisabled()
     {
         return movementDisabled;
+    }
+
+    private void setMovementDisabled(bool disable)
+    {
+        movementDisabled = disable;
     }
 
     public void RestartLevelOnDeath()   // Selle kutsub death animation v�lja kui l�bi saab

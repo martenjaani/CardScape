@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     {
         Events.OnRestartLevel += Restart;
         Events.OnFinishLevel += Finish;
+        
     }
 
     private void OnDestroy()
@@ -59,6 +60,7 @@ public class GameController : MonoBehaviour
         EndTimeText.text = "Time: "+timerText.text;
         FinishPanel.SetActive(true);
         timerText.text = "";
+        Events.SetMovementDisabled(true);
 
 
 

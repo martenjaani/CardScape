@@ -32,6 +32,9 @@ public class Events
     public static event Func<bool> OnGetMovementDisabled;
     public static bool GetMovementDisabled() => OnGetMovementDisabled?.Invoke() ?? false;
 
+    public static event Action<bool> OnSetMovementDisabled;
+    public static void SetMovementDisabled(bool disable) => OnSetMovementDisabled?.Invoke(disable);
+
 
     public static event Func<bool> OnGetPlayerOnGround;
     public static bool GetPlayerOnGround() => OnGetPlayerOnGround?.Invoke() ?? false;
