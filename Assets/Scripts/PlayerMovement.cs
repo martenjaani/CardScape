@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+
     private float timeStart;
     private bool timerStarted = false;
     private float timeEnd;
@@ -92,6 +93,26 @@ public class PlayerMovement : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
     }
 
+    private void FixedUpdate()
+    {
+        if (timerStarted)
+        {
+            if (Time.time > timeEnd)
+            {
+                timerStarted = false;
+                ultraDashCancel();
+            }
+        }
+        if (isUltraDashing & !timerStarted)
+        {
+            timerStarted = true;
+            timeStart = Time.time;
+            previousPosition = transform.position;
+            timeEnd = timeStart + 0.1f;
+
+        }
+    }
+
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
     {
         if (getMovementDisabled())
@@ -132,12 +153,12 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (rb.velocity.y == 0f)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
+        if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
         {
             rb.gravityScale = gravityMultiplier;
             animator.SetBool("isFalling", false);
         }
-        if (rb.velocity.y < 0f)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
+        if (rb.velocity.y < 0f && !isDashing && !isUltraDashing)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
         {
             rb.gravityScale = gravityMultiplier * 1.5f;
             animator.SetBool("isJumping", false);
@@ -211,20 +232,12 @@ public class PlayerMovement : MonoBehaviour
         {
             if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-ultraDashSpeed, 0);
-<<<<<<< Updated upstream
-            horizontalMovement = 0;
-            
-=======
             rb.gravityScale = 0;
-            ultraDashCancel();
->>>>>>> Stashed changes
         } 
     }
 
     private void ultraDashCancel()
     {
-       
-
         if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
         {
             animator.SetBool("isDashing", false);
@@ -235,26 +248,6 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = gravityMultiplier;
         }
     }
-    private void FixedUpdate()
-    {
-        if (timerStarted)
-        {
-            if (Time.time > timeEnd)
-            {
-                timerStarted = false;
-                ultraDashCancel();
-            }
-        }
-        if (isUltraDashing & !timerStarted)
-        {
-            timerStarted=true;
-            timeStart = Time.time;
-            previousPosition = transform.position;
-            timeEnd = timeStart + 0.1f;
-
-        }
-        
-    }
 
     private IEnumerator CheckPosition()
     {
@@ -262,7 +255,6 @@ public class PlayerMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.3f);
             previousPosition = transform.position;
-            Debug.Log(previousPosition.x);
         }
     }
 
