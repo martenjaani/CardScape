@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,16 +11,15 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed = 1f;
     public float gravityMultiplier = 1f;
     public float jumpPower = 1f;
-    public float jumpPowerMultiplierOnCardActivation = 2f;
 
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+
     private float timeStart;
     private bool timerStarted = false;
     private float timeEnd;
 
-    private bool movementDisabled = false;
     private Vector3 previousPosition;
 
     public float ultraDashSpeed = 20f;
@@ -34,6 +32,8 @@ public class PlayerMovement : MonoBehaviour
         set { activatedDoubleJump = value; }
     }
 
+    private bool movementDisabled = false;
+    private bool isDead = false;
     private float horizontalMovement;
     private bool facingRight = true;
     private float speed;
@@ -74,18 +74,43 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        horizontalMovement = getMovementInput();    
+
+        horizontalMovement = getMovementInput();
+
         movementLogic();                // Liikumise loogika siin sees
         rb.velocity = new Vector2(speed, rb.velocity.y);        // Liigutame uute asukohta
 
-        jumpLogic();        // H�ppamise loogika siin sees
+        checkDeath();   // Igal kaadril vaatame kas tegelane on surnud ja maas.
+
+        jumpLogic();
 
         dashLogic();
 
         ultraDashLogic();
 
         switchSides();              // Muudame liikumise suunda kui tarvis.
+
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
+    }
+
+    private void FixedUpdate()
+    {
+        if (timerStarted)
+        {
+            if (Time.time > timeEnd)
+            {
+                timerStarted = false;
+                ultraDashCancel();
+            }
+        }
+        if (isUltraDashing & !timerStarted)
+        {
+            timerStarted = true;
+            timeStart = Time.time;
+            previousPosition = transform.position;
+            timeEnd = timeStart + 0.1f;
+
+        }
     }
 
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
@@ -128,16 +153,16 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (rb.velocity.y < 0f)                          // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
+        if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
+        {
+            rb.gravityScale = gravityMultiplier;
+            animator.SetBool("isFalling", false);
+        }
+        if (rb.velocity.y < 0f && !isDashing && !isUltraDashing)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
         {
             rb.gravityScale = gravityMultiplier * 1.5f;
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
-        }
-        if (rb.velocity.y == 0f)                       // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
-        {
-            rb.gravityScale = gravityMultiplier;
-            animator.SetBool("isFalling", false);
         }
     }
 
@@ -145,37 +170,49 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation)
         {
-            jumpPower *= jumpPowerMultiplierOnCardActivation; //Jumplogic kasutab seda et kas space hoitakse all v�i mitte, mis siis on vaja jumppowerit t�sta et ta k�rgemale h�ppaks
-                                                              //kaardi aktiveerimisel
+            rb.gravityScale = gravityMultiplier;    // Sätime double jumpiks gravitatsiooni tavaliseks tagasi
+
             ActivatedDoubleJump = true;
             StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i p�rast double jump aktiveerimist.
-        }
+        } 
 
         rb.velocity = new Vector2(rb.velocity.x, jumpPower);
-        animator.SetBool("isJumping", true);
 
-        if (cardActivation)
-            jumpPower /= jumpPowerMultiplierOnCardActivation;
+        animator.SetBool("isJumping", true);
     }
 
     private void dash(bool cardActivation)
     {
-        if (cardActivation & !isDashing)
+        if (cardActivation && !isDashing)
         {
+            dashSetup();
             isDashing = true;
             CancelInvoke("StopDashing");
         }
     }
+    private void ultraDash(bool cardActivation)
+    {
+        if (cardActivation && !isUltraDashing)
+        {
+            dashSetup();
+            movementDisabled = true;
+            isUltraDashing = true;
+        }
+    }
+
+    private void dashSetup()    // Kui dash algab, on neid vaja teha 1 kord.
+    {
+        animator.SetBool("isDashing", true);
+        animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei h�ppa
+    }
+
     private void dashLogic()
     {
         if (isDashing)
         {
-            animator.SetBool("isDashing", true);
-            animator.SetBool("isJumping", false);   // Kui dash algab, siis tehniliselt enam ei h�ppa
-
-            rb.gravityScale = 0;
-            if(facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement
+            if (facingRight) rb.velocity = new Vector2(dashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-dashSpeed, 0);
+            rb.gravityScale = 0;
             horizontalMovement = 0;
             Invoke("StopDashing", dashDuration);
         }
@@ -185,64 +222,31 @@ public class PlayerMovement : MonoBehaviour
     {
         animator.SetBool("isDashing", false);
         isDashing = false;
+
         rb.gravityScale = gravityMultiplier;
-
-    }
-
-    private void ultraDash(bool cardActivation)
-    {
-        if (cardActivation & !isUltraDashing) isUltraDashing = true;
     }
 
     private void ultraDashLogic()
     {
         if (isUltraDashing)
         {
-            animator.SetBool("isDashing", true);
-            animator.SetBool("isJumping", false);
-
-            rb.gravityScale = 0;
             if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-ultraDashSpeed, 0);
-            horizontalMovement = 0;
-            
+            rb.gravityScale = 0;
         } 
     }
 
     private void ultraDashCancel()
     {
-       
-
         if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
-            {
-                isUltraDashing = false;
-                rb.velocity = Vector3.zero; // Stop the player when the dash is complete
-                rb.gravityScale = gravityMultiplier;
-                animator.SetBool("isDashing", false);
-
-            }
-            
-        
-    }
-    private void FixedUpdate()
-    {
-        if (timerStarted)
         {
-            if (Time.time > timeEnd)
-            {
-                timerStarted = false;
-                ultraDashCancel();
-            }
-        }
-        if (isUltraDashing & !timerStarted)
-        {
-            timerStarted=true;
-            timeStart = Time.time;
-            previousPosition = transform.position;
-            timeEnd = timeStart + 0.1f;
+            animator.SetBool("isDashing", false);
+            movementDisabled = false;
+            isUltraDashing = false;
 
+            rb.velocity = Vector3.zero; // Stop the player when the dash is complete
+            rb.gravityScale = gravityMultiplier;
         }
-        
     }
 
     private IEnumerator CheckPosition()
@@ -251,12 +255,8 @@ public class PlayerMovement : MonoBehaviour
         {
             yield return new WaitForSeconds(0.3f);
             previousPosition = transform.position;
-            Debug.Log(previousPosition.x);
         }
     }
-
-
-
 
     private void movementLogic()     // Movement loogika
     {
@@ -316,7 +316,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void setDead()
     {
-        rb.velocity = new Vector2(0, rb.velocity.y);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
+        rb.velocity = new Vector2(0,0);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
 
         isDashing = false;
         isUltraDashing = false; // no more dash kui surnud NO MORE
@@ -324,8 +324,17 @@ public class PlayerMovement : MonoBehaviour
 
         setMovementDisabled(true);
 
-        animator.SetTrigger("Dead");
+        isDead = true;
     }
+    private void checkDeath()
+    {
+        if (isDead && onGround())
+        {
+            isDead = false;
+            animator.SetTrigger("Dead");
+        }
+    }
+
 
     private bool getMovementDisabled()
     {
