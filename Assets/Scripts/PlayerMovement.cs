@@ -16,12 +16,6 @@ public class PlayerMovement : MonoBehaviour
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
 
-    private float timeStart;
-    private bool timerStarted = false;
-    private float timeEnd;
-
-    private Vector3 previousPosition;
-
     public float ultraDashSpeed = 20f;
     private bool isUltraDashing = false;
 
@@ -91,24 +85,6 @@ public class PlayerMovement : MonoBehaviour
         switchSides();              // Muudame liikumise suunda kui tarvis.
 
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
-    }
-    private void FixedUpdate()
-    {
-        if (timerStarted)               // SELLE PEAB MEETODISSE VISKAMA IDEAALSES MAAILMAS
-        {
-            if (Time.time > timeEnd)
-            {
-                timerStarted = false;
-                ultraDashCancel();
-            }
-        }
-        if (isUltraDashing & !timerStarted)
-        {
-            timerStarted = true;
-            timeStart = Time.time;
-            previousPosition = transform.position;
-            timeEnd = timeStart + 0.1f;
-        }
     }
 
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
@@ -183,8 +159,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation && !isDashing)
         {
-            dashSetup();
             isDashing = true;
+            dashSetup();
             CancelInvoke("StopDashing");
         }
     }
@@ -192,9 +168,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation && !isUltraDashing)
         {
-            dashSetup();
             movementDisabled = true;
             isUltraDashing = true;
+            dashSetup();
         }
     }
 
@@ -218,8 +194,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private void StopDashing()
     {
-        animator.SetBool("isDashing", false);
         isDashing = false;
+        animator.SetBool("isDashing", false);
 
         rb.gravityScale = gravityMultiplier;
     }
@@ -228,31 +204,31 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isUltraDashing)
         {
-            if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
-            else rb.velocity = new Vector2(-ultraDashSpeed, 0);
-            rb.gravityScale = 0;
+            if (facingRight)
+            {
+                rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
+                rb.gravityScale = 0;
+                ultraDashCancel(facingRight);       // boolean on siin true
+            }
+            else
+            {
+                rb.velocity = new Vector2(-ultraDashSpeed, 0);
+                rb.gravityScale = 0;
+                ultraDashCancel(facingRight);       // siin false
+            }
         } 
     }
 
-    private void ultraDashCancel()
+    private void ultraDashCancel(bool direction)
     {
-        if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
+        if (checkWall(direction))  //kui player model enam ei liigu, siis lopetab dashi
         {
-            animator.SetBool("isDashing", false);
             movementDisabled = false;
             isUltraDashing = false;
+            animator.SetBool("isDashing", false);
 
             rb.velocity = Vector3.zero; // Stop the player when the dash is complete
             rb.gravityScale = gravityMultiplier;
-        }
-    }
-
-    private IEnumerator CheckPosition()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.2f);
-            previousPosition = transform.position;
         }
     }
 
@@ -289,6 +265,18 @@ public class PlayerMovement : MonoBehaviour
     private bool onGround() // Kontrollib,  kas tegelane on maa peal
     {
         return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.down, 0.1f, Ground);
+    }
+
+    private bool checkWall(bool movingRight)
+    {
+        if (movingRight)
+        {
+            return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.right, 0.1f, Ground);
+        } 
+        else
+        {
+            return Physics2D.BoxCast(collider.bounds.center, collider.bounds.size, 0f, Vector2.left, 0.1f, Ground);
+        }
     }
 
     private void switchSides()
