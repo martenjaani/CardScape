@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -35,8 +36,18 @@ public class AvaibleCardsScript : MonoBehaviour
         {
             CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
             TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
-            texts[0].text = CardPacks[i].keyCode.ToString();
+            texts[0].text = Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])")[Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])").Length-1];
+            
+
+
+            Debug.Log(CardPacks[i].keyCode.ToString());
+           
+            texts[0].fontSize = 14.5F;
+         
             texts[1].text = CardPacks[i].amountOfCards.ToString() + "x";
+            texts[1].fontSize = 14.5F;
+            
+            
             Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
             Cards[i].cardData = CardPacks[i].cardData;
             KeyCodes.Add(CardPacks[i].keyCode);
