@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         movementLogic();                // Liikumise loogika siin sees
         rb.velocity = new Vector2(speed, rb.velocity.y);        // Liigutame uute asukohta
 
-        checkDeath();   // Igal kaadril vaatame kas tegelane on surnud ja maas.
+        checkDeath();       // Igal kaadril vaatame kas tegelane on surnud ja maas.
 
         jumpLogic();
 
@@ -91,6 +91,24 @@ public class PlayerMovement : MonoBehaviour
         switchSides();              // Muudame liikumise suunda kui tarvis.
 
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
+    }
+    private void FixedUpdate()
+    {
+        if (timerStarted)               // SELLE PEAB MEETODISSE VISKAMA IDEAALSES MAAILMAS
+        {
+            if (Time.time > timeEnd)
+            {
+                timerStarted = false;
+                ultraDashCancel();
+            }
+        }
+        if (isUltraDashing & !timerStarted)
+        {
+            timerStarted = true;
+            timeStart = Time.time;
+            previousPosition = transform.position;
+            timeEnd = timeStart + 0.1f;
+        }
     }
 
     private void FixedUpdate()
@@ -253,7 +271,7 @@ public class PlayerMovement : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.2f);
             previousPosition = transform.position;
         }
     }
@@ -325,6 +343,14 @@ public class PlayerMovement : MonoBehaviour
         setMovementDisabled(true);
 
         isDead = true;
+    }
+    private void checkDeath()
+    {
+        if (isDead && onGround())
+        {
+            isDead = false;
+            animator.SetTrigger("Dead");
+        }
     }
     private void checkDeath()
     {
