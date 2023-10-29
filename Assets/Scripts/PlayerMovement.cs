@@ -87,26 +87,6 @@ public class PlayerMovement : MonoBehaviour
         this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
     }
 
-    private void FixedUpdate()
-    {
-        if (timerStarted)
-        {
-            if (Time.time > timeEnd)
-            {
-                timerStarted = false;
-                ultraDashCancel();
-            }
-        }
-        if (isUltraDashing & !timerStarted)
-        {
-            timerStarted = true;
-            timeStart = Time.time;
-            previousPosition = transform.position;
-            timeEnd = timeStart + 0.1f;
-
-        }
-    }
-
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
     {
         if (getMovementDisabled())
@@ -340,16 +320,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("Dead");
         }
     }
-    private void checkDeath()
-    {
-        if (isDead && onGround())
-        {
-            isDead = false;
-            animator.SetTrigger("Dead");
-        }
-    }
-
-
+   
     private bool getMovementDisabled()
     {
         return movementDisabled;
