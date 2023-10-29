@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
+    private float timeStart;
+    private bool timerStarted = false;
+    private float timeEnd;
 
     private bool movementDisabled = false;
     private Vector3 previousPosition;
@@ -202,13 +205,13 @@ public class PlayerMovement : MonoBehaviour
             if (facingRight) rb.velocity = new Vector2(ultraDashSpeed, 0); // Adjust the direction of dash as per your requirement
             else rb.velocity = new Vector2(-ultraDashSpeed, 0);
             horizontalMovement = 0;
-            ultraDashCancel();
+            
         } 
     }
 
     private void ultraDashCancel()
     {
-        StartCoroutine(CheckPosition());
+       
 
         if (Mathf.Approximately(transform.position.x, previousPosition.x))  //kui player model enam ei liigu, siis lopetab dashi
             {
@@ -221,13 +224,34 @@ public class PlayerMovement : MonoBehaviour
             
         
     }
+    private void FixedUpdate()
+    {
+        if (timerStarted)
+        {
+            if (Time.time > timeEnd)
+            {
+                timerStarted = false;
+                ultraDashCancel();
+            }
+        }
+        if (isUltraDashing & !timerStarted)
+        {
+            timerStarted=true;
+            timeStart = Time.time;
+            previousPosition = transform.position;
+            timeEnd = timeStart + 0.1f;
+
+        }
+        
+    }
 
     private IEnumerator CheckPosition()
     {
         while (true)
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
             previousPosition = transform.position;
+            Debug.Log(previousPosition.x);
         }
     }
 
