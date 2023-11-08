@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI EndTimeText;
     public GameObject FinishPanel;
 
+    public AudioClipGroup Audio1;
+
     private void Awake()
     {
         Events.OnRestartLevel += Restart;
@@ -36,6 +38,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKey(KeyCode.Alpha1))
+        {
+            Audio1.PLay();
+        }
+
         if (Input.GetKeyDown("r"))
         {
             Restart();
