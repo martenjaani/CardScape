@@ -24,12 +24,7 @@ public class CardScript : MonoBehaviour
     {
         cardName.text = cardData.cardName;
         if(cardData.icon != null)
-        {
-            Vector3 position = transform.position;
-            position += cardData.icon.transform.position;
-            position.y += 75;
-            GameObject.Instantiate(cardData.icon, position, Quaternion.identity, transform);
-        }
+            GameObject.Instantiate(cardData.icon, cardName.GetComponent<RectTransform>().position, Quaternion.identity, transform);
     }
 
     public void Pressed()
