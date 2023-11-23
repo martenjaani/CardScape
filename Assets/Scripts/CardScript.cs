@@ -8,6 +8,7 @@ public class CardScript : MonoBehaviour
 {
     public CardData cardData;
     public TextMeshProUGUI cardName;
+    public TextMeshProUGUI cardShortCut;
 
     private AvaibleCardsScript cardsScript;
 
@@ -22,6 +23,13 @@ public class CardScript : MonoBehaviour
     private void Start()
     {
         cardName.text = cardData.cardName;
+        if(cardData.icon != null)
+        {
+            Vector3 position = transform.position;
+            position += cardData.icon.transform.position;
+            position.y += 75;
+            GameObject.Instantiate(cardData.icon, position, Quaternion.identity, transform);
+        }
     }
 
     public void Pressed()

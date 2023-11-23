@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Double Jump
   description: Jump again
-  icon: {fileID: 0}
+  icon: {fileID: 4226205417172295009, guid: 42947d9be083848478b95909c0a7ece7, type: 3}

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Ultra Dash
   description: Dash until hit a wall
-  icon: {fileID: 0}
+  icon: {fileID: 4655036419986907351, guid: 6f10baa8530ce9845b2321cc1c6a4540, type: 3}

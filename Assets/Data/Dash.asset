@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Dash
   description: Dash in facing direction
-  icon: {fileID: 0}
+  icon: {fileID: 287135937188847808, guid: b023ad2b83cd3ba4dadc5b9741fba69d, type: 3}
