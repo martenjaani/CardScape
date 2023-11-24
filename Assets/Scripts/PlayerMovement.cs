@@ -6,18 +6,46 @@ using UnityEngine.Tilemaps;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Movement")]
     public float accelerationSpeed = 1f;
     public float decelartionSpeed = 1f;
     public float maxSpeed = 1f;
+
+    [Header("Jump")]
     public float gravityMultiplier = 1f;
     public float jumpPower = 1f;
+    private bool isFalling = false;
 
+    [Header("WallJump")]
+    public float wallJumpDistance = 1f;
+    public float wallJumpPower = 1f;
+    private bool ActivatedWallJump = false;
+
+    [Header("Dash")]
     public float dashSpeed = 10f;
     public float dashDuration = 1.5f; // Duration of the dash in seconds
     private bool isDashing = false;
 
+    [Header("Ultradash")]
     public float ultraDashSpeed = 20f;
     private bool isUltraDashing = false;
+
+    [Header("Wallslide")]
+    public float wallSlideSpeed = 2f;
+    public bool isWallSliding = false;
+
+    [Header("Grapple")]
+    public GrapplingRope grappleRope;
+    public Camera main_camera;    
+    public Transform firePoint;     // See määrab laskmise alustuskoha
+    [SerializeField] private float maxDistance = 20f;
+    [SerializeField] private bool launchToPoint = false;
+    [SerializeField] private float launchSpeed = 1f;
+    [SerializeField] private float targetDistance = 3f;
+    [SerializeField] private float targetFrequency = 1f;
+
+    [HideInInspector] public Vector2 grapplePoint;      // Grapple abi
+    [HideInInspector] public Vector2 grappleDistanceVector;
 
     private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti v�i mitte.
     public bool ActivatedDoubleJump
@@ -35,6 +63,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D collider;
     private Animator animator;
+    private SpringJoint2D springJoint2D;
+
+    [Header("Misc")]
     [SerializeField] private LayerMask Ground;
 
     private void Awake()
@@ -42,9 +73,13 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
+        springJoint2D = GetComponent<SpringJoint2D>();
 
         rb.gravityScale = gravityMultiplier;
         ActivatedDoubleJump = false;
+
+        grappleRope.enabled = false;    //Grapple stuff
+        springJoint2D.enabled = false;  //Grapple stuff
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta h�ppaks
         Events.DashCardActivated += dash;
@@ -53,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetMovementDisabled += getMovementDisabled;
         Events.OnGetPlayerOnGround += onGround;
         Events.OnSetMovementDisabled += setMovementDisabled;
+        Events.WallJumpCardActivated += wallJump;
     }
 
     private void OnDestroy()
@@ -64,6 +100,7 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetMovementDisabled -= getMovementDisabled;
         Events.OnGetPlayerOnGround -= onGround;
         Events.OnSetMovementDisabled -= setMovementDisabled;
+        Events.WallJumpCardActivated -= wallJump;
     }
 
     void Update()
@@ -77,6 +114,10 @@ public class PlayerMovement : MonoBehaviour
         checkDeath();       // Igal kaadril vaatame kas tegelane on surnud ja maas.
 
         jumpLogic();
+
+        wallSlideLogic();       // Peab olema peale jump logicut for reasons
+
+        //grappleLogic();           // Kuna praegu lic ei tööta, siis get it outta here
 
         dashLogic();
 
@@ -95,7 +136,6 @@ public class PlayerMovement : MonoBehaviour
         }
         return Input.GetButtonDown("Jump");
     }
-
     private bool getJumpButtonUp()
     {
         if (movementDisabled)
@@ -114,6 +154,62 @@ public class PlayerMovement : MonoBehaviour
         return Input.GetAxisRaw("Horizontal");
     }
 
+    private bool getGrappleButtonDown()
+    {
+        if (getMovementDisabled())
+        {
+            return false;
+        }
+        return Input.GetButtonDown("Fire1");
+    }
+    private bool getGrappleButtonUp()
+    {
+        if (movementDisabled)
+        {
+            return false;
+        }
+        return Input.GetButtonUp("Fire1");
+    }
+
+    private void wallSlideLogic()
+    {
+        if (isFalling && checkWall(facingRight) && !ActivatedWallJump)
+        {
+            if (facingRight)
+            {
+                if (getMovementInput() == 1)
+                {
+                    isWallSliding = true;
+                    rb.velocity = new Vector2(0, -wallSlideSpeed);
+                    animator.SetBool("isWallSliding", true);
+                }
+                else
+                {
+                    isWallSliding = false;
+                    animator.SetBool("isWallSliding", false);
+                }
+            }
+            else
+            {
+                if (getMovementInput() == -1)
+                {
+                    isWallSliding = true;
+                    rb.velocity = new Vector2(0, -wallSlideSpeed);
+                    animator.SetBool("isWallSliding", true);
+                }
+                else
+                {
+                    isWallSliding = false;
+                    animator.SetBool("isWallSliding", false);
+                }
+            }
+        }
+        else
+        {
+            isWallSliding = false;
+            animator.SetBool("isWallSliding", false);
+        }
+    }
 
     private void jumpLogic()
     {
@@ -130,11 +226,13 @@ public class PlayerMovement : MonoBehaviour
         if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
         {
             rb.gravityScale = gravityMultiplier;
+            isFalling = false;
             animator.SetBool("isFalling", false);
         }
         if (rb.velocity.y < 0f && !isDashing && !isUltraDashing)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
         {
             rb.gravityScale = gravityMultiplier * 1.5f;
+            isFalling = true;
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
         }
@@ -145,14 +243,102 @@ public class PlayerMovement : MonoBehaviour
         if (cardActivation)
         {
             rb.gravityScale = gravityMultiplier;    // Sätime double jumpiks gravitatsiooni tavaliseks tagasi
-
             ActivatedDoubleJump = true;
             StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i p�rast double jump aktiveerimist.
-        } 
+        }
 
         rb.velocity = new Vector2(rb.velocity.x, jumpPower);
 
         animator.SetBool("isJumping", true);
+    }
+
+    private void wallJump()
+    {
+        isWallSliding = false;
+        ActivatedWallJump = true;
+
+        rb.gravityScale = gravityMultiplier;    // Sätime wall jumpiks gravitatsiooni tavaliseks tagasi
+
+        if (facingRight)
+        {
+            rb.velocity = new Vector2(-wallJumpDistance, jumpPower);
+            facingRight = false;
+        }
+        else
+        {
+            rb.velocity = new Vector2(wallJumpDistance, jumpPower);
+            facingRight = true;
+        }
+        
+
+        animator.SetBool("isJumping", true);
+
+        Invoke("WallJumpReset",0.1f);
+        DisableMovementFor(0.1f);
+    }
+
+    private void WallJumpReset()
+    {
+        ActivatedWallJump = false;
+    }
+
+    private void grappleLogic()     // I have no clue what the fuck is happening
+    {
+        if (getGrappleButtonDown())
+        {
+            SetGrapplePoint();
+        }
+        else if (getGrappleButtonUp())
+        {
+            grappleRope.enabled = false;
+            springJoint2D.enabled = false;
+            rb.gravityScale = 6;
+        }
+    }
+
+    public void SetGrapplePoint()
+    {
+        Vector2 distanceVector = main_camera.ScreenToWorldPoint(Input.mousePosition) - firePoint.position;  // Leiame mis suunda lasta
+        if (Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, LayerMask.NameToLayer("Ground")))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
+            if (true)            // Paneme, et grappbleb ainult leveli objektidele
+            {
+                if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance)
+                {
+                    grapplePoint = hit.point;
+                    grappleDistanceVector = grapplePoint - (Vector2)firePoint.position;         // it all kinda works, but not at all.
+                    grappleRope.enabled = true;
+
+                }
+            }
+
+        }
+    }
+
+    public void Grapple()       // Teostame grapple
+    {
+        springJoint2D.autoConfigureDistance = false;        // peab removema springjoint ma 100% sure et see nussibki, aga no ei mõjuta game rn
+        if (!launchToPoint)
+        {
+            springJoint2D.distance = targetDistance;
+            springJoint2D.frequency = targetFrequency;
+        }
+        if (!launchToPoint)
+        {
+            springJoint2D.connectedAnchor = grapplePoint;
+            springJoint2D.enabled = true;
+        }
+        else
+        {
+            springJoint2D.connectedAnchor = grapplePoint;
+
+            Vector2 distanceVector = firePoint.position - this.transform.position;
+
+            springJoint2D.distance = distanceVector.magnitude;
+            springJoint2D.frequency = launchSpeed;
+            springJoint2D.enabled = true;
+        }
     }
 
     private void dash(bool cardActivation)
@@ -326,6 +512,16 @@ public class PlayerMovement : MonoBehaviour
         return movementDisabled;
     }
 
+    private void DisableMovementFor(float time)
+    {
+        movementDisabled = true;
+        Invoke("EnableMovement",time);
+    }
+    private void EnableMovement()
+    {
+        movementDisabled = false;
+    }
+
     private void setMovementDisabled(bool disable)
     {
         movementDisabled = disable;
@@ -334,5 +530,14 @@ public class PlayerMovement : MonoBehaviour
     public void RestartLevelOnDeath()   // Selle kutsub death animation v�lja kui l�bi saab
     {
         Events.RestartLevel();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (firePoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(firePoint.position, maxDistance);
+        }
     }
 }

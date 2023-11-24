@@ -21,6 +21,10 @@ public class Events
     public static void UltraDash() => UltraDashCardActivated?.Invoke(true);
 
 
+    public static event Action WallJumpCardActivated;
+    public static void WallJump() => WallJumpCardActivated?.Invoke();
+
+
     public static event Action OnRestartLevel;
     public static void RestartLevel() => OnRestartLevel?.Invoke();
 

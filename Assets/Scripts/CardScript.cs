@@ -34,7 +34,7 @@ public class CardScript : MonoBehaviour
                 if (player != null)
                 {
                     PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-                    if (!Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump)
+                    if (!Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump && !playerMovement.isWallSliding)
                     {
                         Events.DoubleJump();
                         Events.CardActivated(this);
@@ -57,6 +57,25 @@ public class CardScript : MonoBehaviour
                 Events.UltraDash();
                 Events.CardActivated(this);
             }
+
+            if (cardName.text.Equals("Wall Jump"))
+            {
+                GameObject player = GameObject.FindGameObjectWithTag("Player");
+                if (player != null)
+                {
+                    PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
+                    if (playerMovement.isWallSliding)
+                    {
+                        Events.WallJump();
+                        Events.CardActivated(this);
+                    }
+                    else
+                        return;
+                }
+                else
+                    return;
+            }
+
 
         }
 
