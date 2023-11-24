@@ -19,6 +19,7 @@ public class LevelSelectorScript : MonoBehaviour
 
     public List<LevelData> levelDataList = new List<LevelData>();
     private LevelData currentLevelData;
+    private int currentLevelIndex;
 
     public static Action<LevelData> StartLevel;
 
@@ -29,10 +30,14 @@ public class LevelSelectorScript : MonoBehaviour
         NextLevelButton.onClick.AddListener(onNextLevel);
         PreviousLevelButton.onClick.AddListener(onPreviousLevel);
 
-        NextLevelButton.gameObject.SetActive(false);
         PreviousLevelButton.gameObject.SetActive(false);
-        
-        if(levelDataList.Count > 0 )
+        if (levelDataList.Count <= 1)
+            NextLevelButton.gameObject.SetActive(false);
+        else
+            NextLevelButton.gameObject.SetActive(true);
+
+        currentLevelIndex = 0;
+        if (levelDataList.Count > 0 )
             currentLevelData = levelDataList[0];
         else
             currentLevelData = null;
@@ -54,12 +59,26 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void onNextLevel()
     {
-
+        int levelIndex = currentLevelIndex + 1;
+        currentLevelIndex++;
+        currentLevelData = levelDataList[levelIndex];
+        setLevelInfo(currentLevelData);
+        if (levelIndex == levelDataList.Count - 1)
+            NextLevelButton.gameObject.SetActive(false);
+        if (levelIndex == 1)
+            PreviousLevelButton.gameObject.SetActive(true);
     }
 
     public void onPreviousLevel()
     {
-
+        int levelIndex = currentLevelIndex - 1;
+        currentLevelIndex--;
+        currentLevelData = levelDataList[levelIndex];
+        setLevelInfo(currentLevelData);
+        if (levelIndex == 0)
+            PreviousLevelButton.gameObject.SetActive(false);
+        if (levelIndex == levelDataList.Count - 2) 
+            NextLevelButton.gameObject.SetActive(true);
     }
 
     public void setLevelInfo(LevelData data)
