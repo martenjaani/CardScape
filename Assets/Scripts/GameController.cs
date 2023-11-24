@@ -12,12 +12,16 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI EndTimeText;
     public GameObject FinishPanel;
 
-    public AudioClipGroup Audio1;
+    public AudioClipGroup Dash;
+    public AudioClipGroup Landing;
+    public AudioClipGroup Death;
+   
 
     private void Awake()
     {
         Events.OnRestartLevel += Restart;
         Events.OnFinishLevel += Finish;
+        Events.OnPLaySound += PlayCardSound;
         
     }
 
@@ -32,16 +36,13 @@ public class GameController : MonoBehaviour
         startTime = Time.time;
         timerStarted = true;
         FinishPanel.SetActive(false);
+         
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
-        {
-            Audio1.PLay();
-        }
 
         if (Input.GetKeyDown("r"))
         {
@@ -57,6 +58,21 @@ public class GameController : MonoBehaviour
             timerText.text = minutes + ":" + seconds;
         }
     }
+
+    void PlayCardSound(string card)
+    {
+        switch (card)
+        {
+            case "Dash":
+                Dash.Play(); break;
+            case "Landing":
+                Landing.Play();break;
+            case "Death":
+                Death.Play(); break;
+       
+        }
+    }
+
     private void Restart()  // Läbi death animationi tuleme siia.
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

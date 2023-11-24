@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6b699ec1b2a7894289c6ef20fc75d3c, type: 3}
-  m_Name: Dash
+  m_Name: Death
   m_EditorClassIdentifier: 
   VolumeMin: 0.05
   VolumeMax: 0.05
@@ -18,5 +18,6 @@ MonoBehaviour:
   PitchMax: 1
   Cooldown: 0.1
   AudioClips:
-  - {fileID: 8300000, guid: d8181c0ac752f0841b3abca11d1bb7b4, type: 3}
-  - {fileID: 8300000, guid: f2c7e3c639f726c4ab7c0071cf8229ee, type: 3}
+  - {fileID: 8300000, guid: d2a1c0c2486bdb94d9bfc9cbbbf2b223, type: 3}
+  - {fileID: 8300000, guid: 007e3e4f27b3d824d9d927230d18ad1c, type: 3}
+  - {fileID: 8300000, guid: a50c416b0c9835843a28cb5abdc58c4f, type: 3}
