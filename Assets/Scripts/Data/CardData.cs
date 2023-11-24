@@ -9,4 +9,5 @@ public class CardData : ScriptableObject
     public string cardName;
     public string description;
     public GameObject icon;
+    public AudioClipGroup audioClipGroup;
 }
