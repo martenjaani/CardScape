@@ -23,7 +23,6 @@ public class GameController : MonoBehaviour
     public AudioClipGroup Death;
 
     public static Action sceneLoaded;
-    public static Action menuLoaded;
 
     private void Awake()
     {
@@ -119,8 +118,6 @@ public class GameController : MonoBehaviour
 
     public void onQuit()
     {
-        Debug.Log("Quit button pressed");
-        menuLoaded?.Invoke();
         SceneManager.LoadScene("Menu");
     }
 }
