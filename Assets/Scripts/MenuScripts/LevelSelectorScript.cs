@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -18,6 +19,8 @@ public class LevelSelectorScript : MonoBehaviour
 
     public List<LevelData> levelDataList = new List<LevelData>();
     private LevelData currentLevelData;
+
+    public static Action<LevelData> StartLevel;
 
     void Start()
     {
@@ -46,8 +49,7 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void onStartLevel()
     {
-        SceneManager.LoadScene(currentLevelData.SceneName);
-        gameObject.SetActive(false);
+        StartLevel?.Invoke(currentLevelData);
     }
 
     public void onNextLevel()
