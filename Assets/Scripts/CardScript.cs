@@ -8,6 +8,7 @@ public class CardScript : MonoBehaviour
 {
     public CardData cardData;
     public TextMeshProUGUI cardName;
+    public TextMeshProUGUI cardShortCut;
 
     private AvaibleCardsScript cardsScript;
 
@@ -15,13 +16,15 @@ public class CardScript : MonoBehaviour
 
     private void Awake()
     {
-        cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et pärast selle kaardi hävimist
+        cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et pï¿½rast selle kaardi hï¿½vimist
                                                                            //see kaart listist eemaldada
     }
 
     private void Start()
     {
         cardName.text = cardData.cardName;
+        if(cardData.icon != null)
+            GameObject.Instantiate(cardData.icon, cardName.GetComponent<RectTransform>().position, Quaternion.identity, transform);
     }
 
     public void Pressed()
@@ -37,8 +40,6 @@ public class CardScript : MonoBehaviour
                     if (!Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump && !playerMovement.isWallSliding)
                     {
                         Events.DoubleJump();
-                        Events.CardActivated(this);
-                    }
                     else
                         return;
                 }
@@ -47,16 +48,10 @@ public class CardScript : MonoBehaviour
             }
 
             if (cardName.text.Equals("Dash"))
-            {
                 Events.Dash();
-                Events.CardActivated(this);
-            }
 
             if (cardName.text.Equals("Ultra Dash"))
-            {
                 Events.UltraDash();
-                Events.CardActivated(this);
-            }
 
             if (cardName.text.Equals("Wall Jump"))
             {
@@ -67,7 +62,6 @@ public class CardScript : MonoBehaviour
                     if (playerMovement.isWallSliding)
                     {
                         Events.WallJump();
-                        Events.CardActivated(this);
                     }
                     else
                         return;
@@ -77,9 +71,7 @@ public class CardScript : MonoBehaviour
             }
 
 
+            Events.CardActivated(this);
         }
-
-            //cardsScript.RemoveCard(gameObject);
-            //Destroy(gameObject);
-        }
+    }
 }

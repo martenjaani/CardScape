@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fc4938f7ebe3454886016fac9d4920b, type: 3}
-  m_Name: Dash
+  m_Script: {fileID: 11500000, guid: e09b77d4473614e4d9b0703062e1f1a6, type: 3}
+  m_Name: Level2
   m_EditorClassIdentifier: 
-  cardName: Dash
-  description: Dash in facing direction
-  icon: {fileID: 0}
+  LevelName: Level 2
+  SceneName: Level 2
+  BestTime: maybe
+  IconSprite: {fileID: -6583042440137585631, guid: 95216ae6584ba174fa48ec4f87a5488b, type: 3}

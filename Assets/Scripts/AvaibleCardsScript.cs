@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,9 +13,11 @@ public class AvaibleCardsScript : MonoBehaviour
     List<CardScript> Cards = new List<CardScript>();
     List<KeyCode> KeyCodes = new List<KeyCode>();
     List<int> amountOfCards = new List<int>();
+    List<RectTransform[]> images = new List<RectTransform[]>(); 
 
     public CardScript CardPrefab;
     public GameObject CardPackPrefab;
+    private RectTransform AmountPanel;
 
     public List<CardPack> CardPacks = new List<CardPack>();
 
@@ -34,11 +39,27 @@ public class AvaibleCardsScript : MonoBehaviour
         for (int i = 0; i < CardPacks.Count; i++)
         {
             CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
-            TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
-            texts[0].text = CardPacks[i].keyCode.ToString();
+            AmountPanel = CardPackObjects[i].GetComponentInChildren<RectTransform>();
+            images.Add(AmountPanel.GetComponentsInChildren<RectTransform>());
+
+            /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
+            texts[0].text = Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])")[Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])").Length-1];
+            
+            Debug.Log(CardPacks[i].keyCode.ToString());
+           
+            texts[0].fontSize = 14.5F;
             texts[1].text = CardPacks[i].amountOfCards.ToString() + "x";
+            texts[1].fontSize = 14.5F;*/
+            if (CardPacks[i].amountOfCards > 5)
+                CardPacks[i].amountOfCards = 5;
+
+            SetAmount(CardPacks[i].amountOfCards, i);
             Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
             Cards[i].cardData = CardPacks[i].cardData;
+            if (CardPacks[i].keyCode.ToString().Equals("LeftShift"))
+                Cards[i].cardShortCut.text = "Shift";
+            else
+                Cards[i].cardShortCut.text = CardPacks[i].keyCode.ToString();
             KeyCodes.Add(CardPacks[i].keyCode);
             amountOfCards.Add(CardPacks[i].amountOfCards);
         }
@@ -61,10 +82,12 @@ public class AvaibleCardsScript : MonoBehaviour
     {
         int i = Cards.IndexOf(script);
         amountOfCards[i]--;
-        TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
-        texts[1].text = amountOfCards[i].ToString()+"x";
-        if (amountOfCards[i] == 0)
+        SetAmount(amountOfCards[i], i);
+        /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
+        texts[1].text = amountOfCards[i].ToString()+"x";*/
+        if (amountOfCards[i] == 0) {
             RemoveEachElement(CardPackObjects[i]);
+        };
     }
 
     private void RemoveEachElement(GameObject cardPackObject)
@@ -74,6 +97,14 @@ public class AvaibleCardsScript : MonoBehaviour
         {
             Destroy(transform.gameObject);
         }
+    }
+
+    private void SetAmount(int amount, int index)
+    {
+        foreach (RectTransform image in images[index])
+            image.gameObject.SetActive(false);
+        for (int i = 0; i < amount + 2; i++)
+            images[index][i].gameObject.SetActive(true);
     }
 }
 

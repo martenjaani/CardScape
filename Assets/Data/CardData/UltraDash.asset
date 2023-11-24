@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8fc4938f7ebe3454886016fac9d4920b, type: 3}
-  m_Name: DoubleJump
+  m_Name: UltraDash
   m_EditorClassIdentifier: 
-  cardName: Double Jump
-  description: Jump again
-  icon: {fileID: 0}
+  cardName: Ultra Dash
+  description: Dash until hit a wall
+  icon: {fileID: 4655036419986907351, guid: 6f10baa8530ce9845b2321cc1c6a4540, type: 3}

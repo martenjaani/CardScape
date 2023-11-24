@@ -7,11 +7,13 @@ public class Opstacle : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerMovement player = collision.GetComponent<PlayerMovement>();
+        if(collision.CompareTag("Player"))
+            Events.PlayerDead();
+        
+        /*PlayerMovement player = collision.GetComponent<PlayerMovement>();
         if (player != null)
         {
             Events.PlayerDead();    // Sätime mängija surnuks. Death animation lõpus level reset
-        }
+        }*/
     }
-
 }

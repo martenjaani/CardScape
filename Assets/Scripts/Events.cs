@@ -39,10 +39,15 @@ public class Events
     public static event Action<bool> OnSetMovementDisabled;
     public static void SetMovementDisabled(bool disable) => OnSetMovementDisabled?.Invoke(disable);
 
+    public static event Action<string> OnPLaySound;
+    public static void PlaySound(string card) => OnPLaySound?.Invoke(card);
 
     public static event Func<bool> OnGetPlayerOnGround;
     public static bool GetPlayerOnGround() => OnGetPlayerOnGround?.Invoke() ?? false;
 
     public static event Action OnFinishLevel;
     public static void FinishLevel() => OnFinishLevel?.Invoke();
+
+    public static event Action nextLevel;
+    public static void NextLevel() => nextLevel?.Invoke();
 }

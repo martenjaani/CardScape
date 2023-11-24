@@ -225,9 +225,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
         {
+            if (rb.gravityScale != gravityMultiplier) Events.PlaySound("Landing");
             rb.gravityScale = gravityMultiplier;
             isFalling = false;
             animator.SetBool("isFalling", false);
+            
         }
         if (rb.velocity.y < 0f && !isDashing && !isUltraDashing)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
         {
@@ -345,6 +347,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation && !isDashing)
         {
+            Events.PlaySound("Dash");
             isDashing = true;
             dashSetup();
             CancelInvoke("StopDashing");
@@ -356,6 +359,7 @@ public class PlayerMovement : MonoBehaviour
         {
             movementDisabled = true;
             isUltraDashing = true;
+            Events.PlaySound("Dash");
             dashSetup();
         }
     }
@@ -484,10 +488,12 @@ public class PlayerMovement : MonoBehaviour
             ActivatedDoubleJump = !onGround();
             yield return null;
         }
+        
     }
 
     private void setDead()
-    {
+    {   
+        
         rb.velocity = new Vector2(0,0);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
 
         isDashing = false;
@@ -504,9 +510,10 @@ public class PlayerMovement : MonoBehaviour
         {
             isDead = false;
             animator.SetTrigger("Dead");
+            Events.PlaySound("Death");
         }
     }
-
+   
     private bool getMovementDisabled()
     {
         return movementDisabled;
