@@ -43,4 +43,7 @@ public class Events
 
     public static event Action OnFinishLevel;
     public static void FinishLevel() => OnFinishLevel?.Invoke();
+
+    public static event Action nextLevel;
+    public static void NextLevel() => nextLevel?.Invoke();
 }

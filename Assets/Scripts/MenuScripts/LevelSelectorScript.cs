@@ -20,11 +20,13 @@ public class LevelSelectorScript : MonoBehaviour
     public List<LevelData> levelDataList = new List<LevelData>();
     private LevelData currentLevelData;
     private int currentLevelIndex;
+    private bool nextLevelCalled = false;
 
     public static Action<LevelData> StartLevel;
 
     void Start()
     {
+        Events.nextLevel += NextLevelCalled;
         MainMenuButton.onClick.AddListener(onMainMenu);
         StartLevelButton.onClick.AddListener(onStartLevel);
         NextLevelButton.onClick.AddListener(onNextLevel);
@@ -67,6 +69,17 @@ public class LevelSelectorScript : MonoBehaviour
             NextLevelButton.gameObject.SetActive(false);
         if (levelIndex == 1)
             PreviousLevelButton.gameObject.SetActive(true);
+        if (nextLevelCalled)
+        {
+            onStartLevel();
+            nextLevelCalled = false;
+        }
+    }
+
+    public void NextLevelCalled()
+    {
+        nextLevelCalled = true;
+        onNextLevel();
     }
 
     public void onPreviousLevel()
@@ -85,5 +98,10 @@ public class LevelSelectorScript : MonoBehaviour
     {
         LevelName.text = data.LevelName;
         LevelImage.sprite = data.IconSprite;
+    }
+
+    private void OnDestroy()
+    {
+        Events.nextLevel -= NextLevelCalled;
     }
 }

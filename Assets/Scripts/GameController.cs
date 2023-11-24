@@ -111,6 +111,11 @@ public class GameController : MonoBehaviour
         pauseTimer = false;
     }
 
+    public void onNextLevel()
+    {
+        Events.NextLevel();
+    }
+
     public void OnRestartButtonClick()
     {
         Restart();
