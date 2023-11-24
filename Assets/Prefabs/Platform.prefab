@@ -372,7 +372,7 @@ MonoBehaviour:
   YDistance: 0
   loop: 1
   ToRight: 1
-  MoveWith: 0
+  MoveWith: 1
 --- !u!1 &8226371447880424356
 GameObject:
   m_ObjectHideFlags: 0

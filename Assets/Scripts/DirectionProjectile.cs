@@ -2,24 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlowerProjectile : MonoBehaviour
+public class DirectionProjectile : MonoBehaviour
 {
     public float Speed = 5;
-    public PlayerMovement Target;
-    private Vector3 direction;
+    public Vector3 direction;
 
-    
+
 
     private void Start()
     {
-       
-        direction = (Target.transform.position - transform.position).normalized;
 
     }
     // Update is called once per frame
     void Update()
     {
-        if (Target != null)
+        if (direction != null)
         {
 
             transform.position += direction * Time.deltaTime * Speed;

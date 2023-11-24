@@ -24,7 +24,9 @@ public class FlowerEnemy : MonoBehaviour
             {
                 FlowerProjectile flowerProjectile = Instantiate<FlowerProjectile>(flowerProjectilePrefab);
                 flowerProjectile.Target = Target;
-                flowerProjectile.transform.position = transform.position;
+                Vector3 spawnPos = transform.position;
+                spawnPos.y -= 0.5f;
+                flowerProjectile.transform.position = spawnPos;
                 NextFireTime = Time.time + FireDelay;
             }
         }
