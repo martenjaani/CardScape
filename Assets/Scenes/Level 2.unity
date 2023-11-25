@@ -11813,7 +11813,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.119636536, y: -3.70673, z: -10.01}
+  m_LocalPosition: {x: -0.11766386, y: -3.70673, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17321,7 +17321,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.7976704, y: -3.72, z: -10.01}
+  m_LocalPosition: {x: -4.7974253, y: -3.72, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19131,13 +19131,10 @@ MonoBehaviour:
   CardPacks:
   - cardData: {fileID: 11400000, guid: 8aec37c6d9631b043944a6ffd0388a77, type: 2}
     amountOfCards: 4
-    keyCode: 32
   - cardData: {fileID: 11400000, guid: 407535da2e18f1146a4d997129a32800, type: 2}
     amountOfCards: 1
-    keyCode: 304
   - cardData: {fileID: 11400000, guid: e749c4998d20ed8478c7009fb314fc0d, type: 2}
     amountOfCards: 1
-    keyCode: 99
 --- !u!114 &1144196455
 MonoBehaviour:
   m_ObjectHideFlags: 0

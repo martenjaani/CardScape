@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Wall Jump
   description: Wall Jump
-  icon: {fileID: 0}
+  keyCode: 32
+  icon: {fileID: 7967858032194516502, guid: 8e4cb0355cf79134fb01f86089de2499, type: 3}
+  audioClipGroup: {fileID: 0}

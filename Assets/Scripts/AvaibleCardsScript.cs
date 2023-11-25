@@ -56,18 +56,18 @@ public class AvaibleCardsScript : MonoBehaviour
             SetAmount(CardPacks[i].amountOfCards, i);
             Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
             Cards[i].cardData = CardPacks[i].cardData;
-            if (CardPacks[i].keyCode.ToString().Equals("LeftShift"))
+            if (Cards[i].cardData.keyCode.ToString().Equals("LeftShift"))
                 Cards[i].cardShortCut.text = "Shift";
             else
-                Cards[i].cardShortCut.text = CardPacks[i].keyCode.ToString();
-            KeyCodes.Add(CardPacks[i].keyCode);
+                Cards[i].cardShortCut.text = Cards[i].cardData.keyCode.ToString();
+            KeyCodes.Add(Cards[i].cardData.keyCode);
             amountOfCards.Add(CardPacks[i].amountOfCards);
         }
     }
 
     void Update()
     {
-        foreach (KeyCode keyCode in KeyCodes)
+        /*foreach (KeyCode keyCode in KeyCodes)
         {
             if (Input.GetKeyDown(keyCode))
             {
@@ -75,7 +75,7 @@ public class AvaibleCardsScript : MonoBehaviour
                 if (amountOfCards[i] > 0)
                     Cards[i].Pressed();
             }
-        }
+        }*/
     }
 
     public void CardActivated(CardScript script)
@@ -106,6 +106,11 @@ public class AvaibleCardsScript : MonoBehaviour
         for (int i = 0; i < amount + 2; i++)
             images[index][i].gameObject.SetActive(true);
     }
+
+    public void FindScript()
+    {
+
+    }
 }
 
 [System.Serializable]
@@ -113,5 +118,4 @@ public class CardPack
 {
     public CardData cardData;
     public int amountOfCards;
-    public KeyCode keyCode;
 }

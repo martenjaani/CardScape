@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Dash
   description: Dash in facing direction
+  keyCode: 304
   icon: {fileID: 287135937188847808, guid: b023ad2b83cd3ba4dadc5b9741fba69d, type: 3}
+  audioClipGroup: {fileID: 0}

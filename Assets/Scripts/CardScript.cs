@@ -27,6 +27,12 @@ public class CardScript : MonoBehaviour
             GameObject.Instantiate(cardData.icon, cardName.GetComponent<RectTransform>().position, Quaternion.identity, transform);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(cardData.keyCode))
+            Pressed();
+    }
+
     public void Pressed()
     {
         if (!Events.GetMovementDisabled())       // Checkime kas movement on lubatud

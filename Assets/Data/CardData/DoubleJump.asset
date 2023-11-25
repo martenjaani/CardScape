@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: Double Jump
   description: Jump again
+  keyCode: 32
   icon: {fileID: 8172024248055525848, guid: 9b25c7267fb4cc54ab3e3040f0d752f1, type: 3}
+  audioClipGroup: {fileID: 0}
