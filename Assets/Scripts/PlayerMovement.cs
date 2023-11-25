@@ -125,7 +125,10 @@ public class PlayerMovement : MonoBehaviour
 
         switchSides();              // Muudame liikumise suunda kui tarvis.
 
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
+        if (!isWallSliding) //Wallslide on erinev
+        {
+            this.transform.rotation = Quaternion.Euler(new Vector3(0f, facingRight ? 0f : 180f, 0f));       // P��rame �mber vastavalt facingRight booleanile.
+        }
     }
 
     private bool getJumpButtonDown()    // KASUTAME SEDA ET TEADA SAADA KAS ON VAJUTATUD JUMP
@@ -179,6 +182,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (getMovementInput() == 1)
                 {
+                    this.transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
                     isWallSliding = true;
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
                     animator.SetBool("isWallSliding", true);
@@ -193,6 +197,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (getMovementInput() == -1)
                 {
+                    this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
                     isWallSliding = true;
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
                     animator.SetBool("isWallSliding", true);
@@ -237,6 +242,10 @@ public class PlayerMovement : MonoBehaviour
             isFalling = true;
             animator.SetBool("isJumping", false);
             animator.SetBool("isFalling", true);
+            if (isWallSliding)
+            {
+                animator.SetBool("isWallSliding", true);
+            }
         }
     }
 
@@ -263,12 +272,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (facingRight)
         {
-            rb.velocity = new Vector2(-wallJumpDistance, jumpPower);
+            rb.velocity = new Vector2(-wallJumpDistance, wallJumpPower);
             facingRight = false;
         }
         else
         {
-            rb.velocity = new Vector2(wallJumpDistance, jumpPower);
+            rb.velocity = new Vector2(wallJumpDistance, wallJumpPower);
             facingRight = true;
         }
         
