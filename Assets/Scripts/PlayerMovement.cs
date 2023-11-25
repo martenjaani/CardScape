@@ -186,7 +186,6 @@ public class PlayerMovement : MonoBehaviour
                     this.transform.rotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
                     isWallSliding = true;
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
-                    animator.SetBool("isWallSliding", true);
                 }
                 else
                 {
@@ -201,7 +200,6 @@ public class PlayerMovement : MonoBehaviour
                     this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
                     isWallSliding = true;
                     rb.velocity = new Vector2(0, -wallSlideSpeed);
-                    animator.SetBool("isWallSliding", true);
                 }
                 else
                 {
@@ -228,6 +226,14 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
 
+        if (onGround())
+        {
+            animator.SetBool("Landing", true);
+        }
+        else
+        {
+            animator.SetBool("Landing", false);     // Landing animation thing
+        }
 
         if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
         {
@@ -235,17 +241,22 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = gravityMultiplier;
             isFalling = false;
             animator.SetBool("isFalling", false);
-            
         }
         if (rb.velocity.y < 0f && !isDashing && !isUltraDashing)             // Kui hakkad h�ppel kukkuma, on gravitatsioon suurem.
         {
             rb.gravityScale = gravityMultiplier * 1.5f;
             isFalling = true;
+
             animator.SetBool("isJumping", false);
-            animator.SetBool("isFalling", true);
-            if (isWallSliding)
+
+            if (isWallSliding)      // Wallsliding animation stuff
             {
+                animator.SetBool("isFalling", false);
                 animator.SetBool("isWallSliding", true);
+            }
+            else
+            {
+                animator.SetBool("isFalling", true);
             }
         }
     }
