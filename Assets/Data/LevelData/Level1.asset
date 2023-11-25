@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   LevelName: Level 1
-  SceneName: SampleScene
+  SceneName: Level 1
   BestTime: yes
   IconSprite: {fileID: 725292314, guid: fbf599fbe92db2945904529002483539, type: 3}
