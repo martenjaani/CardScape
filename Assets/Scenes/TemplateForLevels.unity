@@ -11362,7 +11362,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.20923185, y: -1.5568999, z: -10.01}
+  m_LocalPosition: {x: -0.20955658, y: -1.5568999, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11904,7 +11904,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_Follow: {fileID: 841896585}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5.5
@@ -11933,7 +11933,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.7972, y: -1.564779, z: -10.01}
+  m_LocalPosition: {x: -4.7972403, y: -1.564779, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12003,6 +12003,10 @@ PrefabInstance:
       propertyPath: main_camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 5764061443905899441, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: wallJumpDistance
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6058351766485876328, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: m_Name
       value: Player
@@ -12052,6 +12056,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+--- !u!4 &841896585 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7702145778085762129, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+  m_PrefabInstance: {fileID: 841896584}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &922441657
 GameObject:
   m_ObjectHideFlags: 0

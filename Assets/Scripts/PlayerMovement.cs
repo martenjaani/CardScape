@@ -56,6 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool movementDisabled = false;
     private bool isDead = false;
+    private bool playerSingleDeath = true;
     private float horizontalMovement;
     private bool facingRight = true;
     private float speed;
@@ -502,7 +503,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void setDead()
     {   
-        
         rb.velocity = new Vector2(0,0);    // Saab sellega m�ngida et deathi m�nusamaks teha or something
 
         isDashing = false;
@@ -515,8 +515,9 @@ public class PlayerMovement : MonoBehaviour
     }
     private void checkDeath()
     {
-        if (isDead && onGround())
+        if (isDead && onGround() && playerSingleDeath)
         {
+            playerSingleDeath = false;
             isDead = false;
             animator.SetTrigger("Dead");
             Events.PlaySound("Death");
