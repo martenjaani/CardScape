@@ -16,14 +16,14 @@ public class CardScript : MonoBehaviour
 
     private void Awake()
     {
-        cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et p�rast selle kaardi h�vimist
+        cardsScript = transform.parent.GetComponent<AvaibleCardsScript>(); //Kaartide paneeli scripti, et pärast selle kaardi hävimist
                                                                            //see kaart listist eemaldada
     }
 
     private void Start()
     {
         cardName.text = cardData.cardName;
-        if(cardData.icon != null)
+        if (cardData.icon != null)
             GameObject.Instantiate(cardData.icon, cardName.GetComponent<RectTransform>().position, Quaternion.identity, transform);
     }
 
@@ -38,7 +38,6 @@ public class CardScript : MonoBehaviour
                 {
                     PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
                     if (!Events.GetPlayerOnGround() && !playerMovement.ActivatedDoubleJump && !playerMovement.isWallSliding)
-                    {
                         Events.DoubleJump();
                     else
                         return;
