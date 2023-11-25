@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e09b77d4473614e4d9b0703062e1f1a6, type: 3}
-  m_Name: Level1
+  m_Name: Tutorial
   m_EditorClassIdentifier: 
-  LevelName: Level 1
-  SceneName: Level 1
-  BestTime: yes
-  IconSprite: {fileID: -4565258722644740257, guid: cbe45048b8f55f349925d6cbe98f47c9, type: 3}
+  LevelName: Tutorial
+  SceneName: Tutorial
+  BestTime: LOL
+  IconSprite: {fileID: -8629541387890768676, guid: cbe45048b8f55f349925d6cbe98f47c9, type: 3}
