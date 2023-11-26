@@ -21,6 +21,9 @@ public class GameController : MonoBehaviour
     public AudioClipGroup Dash;
     public AudioClipGroup Landing;
     public AudioClipGroup Death;
+    public AudioClipGroup Jump;
+    public AudioClipGroup Complete;
+    public AudioClipGroup Projectile;
 
     public static Action sceneLoaded;
 
@@ -80,6 +83,13 @@ public class GameController : MonoBehaviour
                 Landing.Play();break;
             case "Death":
                 Death.Play(); break;
+            case "Jump":
+                Jump.Play(); break;
+            case "Complete":
+                Complete.Play(); break;
+            case "Projectile":
+                Projectile.Play(); break;
+
         }
     }
 

@@ -27,6 +27,7 @@ public class FlowerEnemy : MonoBehaviour
                 Vector3 spawnPos = transform.position;
                 spawnPos.y -= 0.5f;
                 flowerProjectile.transform.position = spawnPos;
+                Events.PlaySound("Projectile");
                 NextFireTime = Time.time + FireDelay;
             }
         }

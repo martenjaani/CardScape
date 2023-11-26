@@ -25,7 +25,7 @@ public class Flower4Direction : MonoBehaviour
     void Update()
     {
 
-        if (NextFireTime < Time.time)
+        if (NextFireTime < Time.time && gameObject.GetComponent<Renderer>().isVisible)
         {
             if (up)
             {
@@ -64,6 +64,7 @@ public class Flower4Direction : MonoBehaviour
 
             }
             NextFireTime = Time.time + FireDelay;
+            Events.PlaySound("Projectile");
 
 
         }

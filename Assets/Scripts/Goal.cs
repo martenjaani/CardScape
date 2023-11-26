@@ -10,7 +10,9 @@ public class Goal : MonoBehaviour
         PlayerMovement player = collision.GetComponent<PlayerMovement>();
         if (player != null)
         {
+            Events.PlaySound("Complete");
             Events.FinishLevel();    // Sätime mängija surnuks. Death animation lõpus level reset
+
         }
     }
 }

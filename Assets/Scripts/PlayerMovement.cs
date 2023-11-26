@@ -220,6 +220,7 @@ public class PlayerMovement : MonoBehaviour
         if (getJumpButtonDown() && onGround())    // Kui vajutad h�ppamist ja oled maas, siis h�ppad.
         {
             jump(false);
+            Events.PlaySound("Jump");
         }
         if (getJumpButtonUp() && rb.velocity.y > 0f)     // Kui lased varem lahti on h�pe n�rgem.  Saaks teha ka gravitatsiooni muutmisega, mis on pehmem(?) pmst.
         {
@@ -267,6 +268,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.gravityScale = gravityMultiplier;    // Sätime double jumpiks gravitatsiooni tavaliseks tagasi
             ActivatedDoubleJump = true;
+            Events.PlaySound("Jump");
             StartCoroutine(CheckUntilPlayerOnGroundAfterDoubleJump()); //Alustab Coroutine'i p�rast double jump aktiveerimist.
         }
 
@@ -281,7 +283,7 @@ public class PlayerMovement : MonoBehaviour
         ActivatedWallJump = true;
 
         rb.gravityScale = gravityMultiplier;    // Sätime wall jumpiks gravitatsiooni tavaliseks tagasi
-
+        Events.PlaySound("Jump");
         if (facingRight)
         {
             rb.velocity = new Vector2(-wallJumpDistance, wallJumpPower);
@@ -378,6 +380,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation && !isUltraDashing)
         {
+            Events.PlaySound("Dash");
             movementDisabled = true;
             isUltraDashing = true;
             Events.PlaySound("Dash");
@@ -519,7 +522,7 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
         isUltraDashing = false; // no more dash kui surnud NO MORE
         animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
-
+        Events.PlaySound("Death");
         setMovementDisabled(true);
 
         isDead = true;
@@ -531,7 +534,7 @@ public class PlayerMovement : MonoBehaviour
             playerSingleDeath = false;
             isDead = false;
             animator.SetTrigger("Dead");
-            Events.PlaySound("Death");
+            
         }
     }
    
