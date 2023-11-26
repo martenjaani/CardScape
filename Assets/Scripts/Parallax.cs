@@ -13,7 +13,7 @@ public class Parallax : MonoBehaviour
     {
         startpos = transform.position.x;
         if(GetComponent<SpriteRenderer>()!=null) length = GetComponent<SpriteRenderer>().bounds.size.x;
-        if(GetComponent<ParticleSystem>()!=null) length = GetComponent<ParticleSystem>().GetComponent<Renderer>().bounds.size.x;
+        else if (GetComponent<ParticleSystem>() != null) length = 20;//GetComponent<ParticleSystem>().GetComponent<Renderer>().bounds.size.x;
         
 
 
