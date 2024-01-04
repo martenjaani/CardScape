@@ -53,7 +53,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (timerStarted && !pauseTimer)
+        if (timerStarted)
         {
             timerTime = Time.time - startTime;
 
@@ -62,15 +62,16 @@ public class GameController : MonoBehaviour
 
             timerText.text = minutes + ":" + seconds;
         }
-        if(pauseTimer)
-        {
-            startTime = Time.time - timerTime;
-        }
 
         if (Input.GetKeyDown("r"))
             Restart();
-        if (Input.GetKeyDown(KeyCode.Escape))
-            Pause();
+        if (Input.GetKeyDown(KeyCode.Escape) && !FinishPanel.activeInHierarchy)
+        {
+            if (PausePanel.activeInHierarchy)
+                onContinue();
+            else
+                Pause();
+        }
     }
 
     void PlayCardSound(string card)
@@ -111,14 +112,14 @@ public class GameController : MonoBehaviour
     {
         PausePanel.SetActive(true);
         Events.SetMovementDisabled(true);
-        pauseTimer = true;
+        Time.timeScale = 0;
     }
 
     public void onContinue()
     {
         PausePanel.SetActive(false);
+        Time.timeScale = 1;
         Events.SetMovementDisabled(false);
-        pauseTimer = false;
     }
 
     public void onNextLevel()
