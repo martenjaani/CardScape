@@ -809,7 +809,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Best time: xx:xx.xx'
+  m_text: Unfinished
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2ad98c1d1d451c64faf71899c7721705, type: 2}
   m_sharedMaterial: {fileID: 8519268558121860599, guid: 2ad98c1d1d451c64faf71899c7721705, type: 2}
@@ -848,7 +848,7 @@ MonoBehaviour:
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 40
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0

@@ -50,4 +50,7 @@ public class Events
 
     public static event Action nextLevel;
     public static void NextLevel() => nextLevel?.Invoke();
+
+    public static event Action backToLevelSelector;
+    public static void BackToLevelSelector() => backToLevelSelector?.Invoke();
 }

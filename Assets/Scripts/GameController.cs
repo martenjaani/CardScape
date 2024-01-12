@@ -12,8 +12,8 @@ public class GameController : MonoBehaviour
     private float startTime;
     private float timerTime;
     private bool timerStarted;
-    private bool pauseTimer;
     public TextMeshProUGUI EndTimeText;
+    public TextMeshProUGUI BestTimeText;
 
     public GameObject PausePanel;
     public GameObject FinishPanel;
@@ -48,7 +48,6 @@ public class GameController : MonoBehaviour
         timerStarted = true;
         FinishPanel.SetActive(false);
         PausePanel.SetActive(false);
-        pauseTimer = false;
     }
 
     void Update()
@@ -56,11 +55,7 @@ public class GameController : MonoBehaviour
         if (timerStarted)
         {
             timerTime = Time.time - startTime;
-
-            string minutes = ((int)timerTime / 60).ToString();
-            string seconds = (timerTime % 60).ToString("f2");
-
-            timerText.text = minutes + ":" + seconds;
+            timerText.text = FloatTimeToString(timerTime);
         }
 
         if (Input.GetKeyDown("r"))
@@ -96,16 +91,31 @@ public class GameController : MonoBehaviour
 
     private void Restart()  // Läbi death animationi tuleme siia.
     {
+        Time.timeScale = 1;
         PausePanel.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     private void Finish()
     {
         timerStarted = false;
-        EndTimeText.text = "Time: "+timerText.text;
-        FinishPanel.SetActive(true);
-        timerText.text = "";
         Events.SetMovementDisabled(true);
+        timerText.text = "";
+
+        float currentTime = timerTime;
+        EndTimeText.text = "Time: " + FloatTimeToString(currentTime);
+
+        string sceneName = SceneManager.GetActiveScene().name;
+        float bestTime = PlayerPrefs.GetFloat(sceneName + "BestTime");
+        if (bestTime == 0)
+            bestTime = float.MaxValue;
+        if(currentTime < bestTime)
+        {
+            PlayerPrefs.SetFloat(sceneName + "BestTime", currentTime);
+            bestTime = currentTime;
+        }
+        BestTimeText.text = "Best Time: " + FloatTimeToString(bestTime);
+
+        FinishPanel.SetActive(true);
     }
 
     public void Pause()
@@ -117,13 +127,14 @@ public class GameController : MonoBehaviour
 
     public void onContinue()
     {
-        PausePanel.SetActive(false);
         Time.timeScale = 1;
+        PausePanel.SetActive(false);
         Events.SetMovementDisabled(false);
     }
 
     public void onNextLevel()
     {
+        Time.timeScale = 1;
         Events.NextLevel();
     }
 
@@ -134,6 +145,15 @@ public class GameController : MonoBehaviour
 
     public void onQuit()
     {
+        Time.timeScale = 1;
+        Events.BackToLevelSelector();
         SceneManager.LoadScene("Menu");
+    }
+
+    private string FloatTimeToString(float time)
+    {
+        string minutes = ((int)time / 60).ToString();
+        string seconds = (time % 60).ToString("f2");
+        return minutes + ":" + seconds;
     }
 }

@@ -27,6 +27,8 @@ public class LevelSelectorScript : MonoBehaviour
     void Start()
     {
         Events.nextLevel += NextLevelCalled;
+        Events.backToLevelSelector += BackToLevelSelectorCalled;
+
         MainMenuButton.onClick.AddListener(onMainMenu);
         StartLevelButton.onClick.AddListener(onStartLevel);
         NextLevelButton.onClick.AddListener(onNextLevel);
@@ -94,10 +96,24 @@ public class LevelSelectorScript : MonoBehaviour
             NextLevelButton.gameObject.SetActive(true);
     }
 
+    private void BackToLevelSelectorCalled()
+    {
+        setLevelInfo(currentLevelData);
+    }
+
     public void setLevelInfo(LevelData data)
     {
         LevelName.text = data.LevelName;
         LevelImage.sprite = data.IconSprite;
+        float bestTime = PlayerPrefs.GetFloat(currentLevelData.SceneName + "BestTime");
+        if (bestTime == 0)
+            BestLevelTime.text = "Unfinished";
+        else
+        {
+            string minutes = ((int)bestTime / 60).ToString();
+            string seconds = (bestTime % 60).ToString("f2");
+            BestLevelTime.text = "Best Time: " + minutes + ":" + seconds;
+        }
     }
 
     private void OnDestroy()
