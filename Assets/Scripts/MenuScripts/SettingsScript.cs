@@ -9,12 +9,9 @@ public class Settings : MonoBehaviour
     
     private float Volume;
 
-    public static Action<float> setVolume;
-
     public void SetVolume(float volume)
     {
         Volume = volume;
-        setVolume?.Invoke(Volume);
     }
 
     public void onMainMenu()
