@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,7 @@ public class GameController : MonoBehaviour
     public GameObject PausePanel;
     public GameObject FinishPanel;
 
+    public float MasterVolume = 10.0f;
     public AudioClipGroup Dash;
     public AudioClipGroup Landing;
     public AudioClipGroup Death;
@@ -33,13 +35,15 @@ public class GameController : MonoBehaviour
         Events.OnRestartLevel += Restart;
         Events.OnFinishLevel += Finish;
         Events.OnPLaySound += PlayCardSound;
-        
+        Settings.setVolume += SetVolumeMultiplier;
     }
 
     private void OnDestroy()
     {
         Events.OnRestartLevel -= Restart;
         Events.OnFinishLevel -= Finish;
+        Events.OnPLaySound -= PlayCardSound;
+        Settings.setVolume -= SetVolumeMultiplier;
     }
 
     void Start()
@@ -69,23 +73,27 @@ public class GameController : MonoBehaviour
         }
     }
 
+    void SetVolumeMultiplier(float multiplier)
+    {
+        MasterVolume = multiplier;
+    }
+
     void PlayCardSound(string card)
     {
         switch (card)
         {
             case "Dash":
-                Dash.Play(); break;
+                Dash.Play(MasterVolume); break;
             case "Landing":
-                Landing.Play();break;
+                Landing.Play(MasterVolume); break;
             case "Death":
-                Death.Play(); break;
+                Death.Play(MasterVolume); break;
             case "Jump":
-                Jump.Play(); break;
+                Jump.Play(MasterVolume); break;
             case "Complete":
-                Complete.Play(); break;
-            case "Projectile":
-                Projectile.Play(); break;
-
+                Complete.Play(MasterVolume); break;
+            case "Projectile":  
+                Projectile.Play(MasterVolume); break;
         }
     }
 

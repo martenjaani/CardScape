@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class AudioSourcePool : MonoBehaviour
 {
-    public AudioSource audioSourcePrefab = null;
+    public AudioSource audioSourcePrefab;
     public static AudioSourcePool instance;
-    private List<AudioSource> audioSources = new List<AudioSource>();
+    private List<AudioSource> audioSources;
     private void Awake()
     {
         instance = this;
+        audioSources = new List<AudioSource>();
     }
 
     public AudioSource GetSource()
     {
         foreach (AudioSource source in audioSources)
-        {
             if (!source.isPlaying) return source;
-        }
-        var newSource = Instantiate<AudioSource>(audioSourcePrefab);
-        newSource.transform.SetParent(transform,false);
+        
+        AudioSource newSource = Instantiate(audioSourcePrefab, transform);
         audioSources.Add(newSource);
         return newSource;
     }

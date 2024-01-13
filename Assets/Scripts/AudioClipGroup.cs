@@ -11,39 +11,44 @@ public class AudioClipGroup : ScriptableObject
 
     public float Cooldown = 0.1f;
 
-    private float nextPlayTime = 0;
+    private float nextPlayTime;
 
     public List<AudioClip> AudioClips;
 
-    public void Play()
+    private void OnEnable()
     {
-        Play(AudioSourcePool.instance.GetSource());
+        nextPlayTime = 0;
+    }
+
+    public void Play(float volumeMultiplier)
+    {
+        if(AudioSourcePool.instance != null)
+            Play(AudioSourcePool.instance.GetSource(), volumeMultiplier);
     }
 
     public void PlayOnLoop()
     {
-        Play(AudioSourcePool.instance.GetSource());
+        //Play(AudioSourcePool.instance.GetSource());
     }
-    public void Play(AudioSource source)
+    public void Play(AudioSource source, float volumeMultiplier)
     {
-        if(Time.time < nextPlayTime) { return; }
+        if (Time.time < nextPlayTime) return;
+        if (AudioClips.Count == 0) return; 
         nextPlayTime = Time.time + Cooldown;
         source.clip = AudioClips[Random.Range(0, AudioClips.Count)];
-        source.volume = Random.Range(VolumeMin, VolumeMax);
+        source.volume = Random.Range(VolumeMin, VolumeMax) * volumeMultiplier;
         source.pitch = Random.Range(PitchMin, PitchMax);
         source.Play();
-
     }
 
     public void PlayOnLoop(AudioSource source)
     {
-        if (Time.time < nextPlayTime) { return; }
+        if (Time.time < nextPlayTime) {return; }
         nextPlayTime = Time.time + Cooldown;
         source.clip = AudioClips[Random.Range(0, AudioClips.Count)];
         source.volume = Random.Range(VolumeMin, VolumeMax);
         source.pitch = Random.Range(PitchMin, PitchMax);
         source.loop = true;
         source.Play();
-
     }
 }

@@ -250,7 +250,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 0b8a1fbad09f732458d81d03621c3464, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.01
+  m_Volume: 0.03
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -2270,6 +2270,7 @@ MonoBehaviour:
   BestTimeText: {fileID: 1612588834}
   PausePanel: {fileID: 1642409219}
   FinishPanel: {fileID: 1704700086}
+  MasterVolume: 0
   Dash: {fileID: 11400000, guid: 1a55afe09e1cb1f4a88b12585e916a13, type: 2}
   Landing: {fileID: 11400000, guid: c4bc166697203c64c81d0756e34c4ec3, type: 2}
   Death: {fileID: 11400000, guid: 548319bc90e74f64dafdafdd5554729b, type: 2}
