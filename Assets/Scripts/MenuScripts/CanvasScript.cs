@@ -41,6 +41,6 @@ public class CanvasScript : MonoBehaviour
     {
         MenuLoaded.menuLoaded -= onMenuLoaded;
         LevelSelectorPanel.SetActive(true);
-    } 
+    }
 }
 

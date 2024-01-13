@@ -6,17 +6,7 @@ using UnityEngine.UI;
 public class MenuScript : MonoBehaviour
 {
     public GameObject LevelSelectorPanel;
-    public Button levelSelectorButton;
-    public Button settingsButton;
-    public Button quitButton;
-
-
-    void Start()
-    {
-        levelSelectorButton.onClick.AddListener(onLevelSelectorButton);
-        settingsButton.onClick.AddListener(onSettingsButton);
-        quitButton.onClick.AddListener(onQuitButton);
-    }
+    public GameObject SettingsMenuPanel;
 
     public void onLevelSelectorButton()
     {
@@ -26,7 +16,8 @@ public class MenuScript : MonoBehaviour
 
     public void onSettingsButton()
     {
-
+        SettingsMenuPanel.SetActive(true);
+        gameObject.SetActive(false);
     }
 
     public void onQuitButton()

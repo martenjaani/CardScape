@@ -23,6 +23,4 @@ public class AudioSourcePool : MonoBehaviour
         audioSources.Add(newSource);
         return newSource;
     }
-
-    
 }

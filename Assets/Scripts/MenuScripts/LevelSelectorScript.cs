@@ -116,6 +116,12 @@ public class LevelSelectorScript : MonoBehaviour
         }
     }
 
+    public void DeleteBestTimeData()
+    {
+        PlayerPrefs.DeleteKey(currentLevelData.SceneName + "BestTime");
+        setLevelInfo(currentLevelData);
+    }
+
     private void OnDestroy()
     {
         Events.nextLevel -= NextLevelCalled;
