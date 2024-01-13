@@ -16,10 +16,13 @@ public class GameController : MonoBehaviour
     public TextMeshProUGUI EndTimeText;
     public TextMeshProUGUI BestTimeText;
 
-    public GameObject PausePanel;
     public GameObject FinishPanel;
+    public GameObject PausePanel;
+    public GameObject SettingsPanel;
 
     public float MasterVolume = 10.0f;
+    public AudioSource RainSound;
+    private float RainSoundSetVolume;
     public AudioClipGroup Dash;
     public AudioClipGroup Landing;
     public AudioClipGroup Death;
@@ -35,7 +38,6 @@ public class GameController : MonoBehaviour
         Events.OnRestartLevel += Restart;
         Events.OnFinishLevel += Finish;
         Events.OnPLaySound += PlayCardSound;
-        Settings.setVolume += SetVolumeMultiplier;
     }
 
     private void OnDestroy()
@@ -43,11 +45,13 @@ public class GameController : MonoBehaviour
         Events.OnRestartLevel -= Restart;
         Events.OnFinishLevel -= Finish;
         Events.OnPLaySound -= PlayCardSound;
-        Settings.setVolume -= SetVolumeMultiplier;
     }
 
     void Start()
     {
+        MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
+        RainSoundSetVolume = RainSound.volume;
+        SetVolume(MasterVolume);
         startTime = Time.time;
         timerStarted = true;
         FinishPanel.SetActive(false);
@@ -71,11 +75,6 @@ public class GameController : MonoBehaviour
             else
                 Pause();
         }
-    }
-
-    void SetVolumeMultiplier(float multiplier)
-    {
-        MasterVolume = multiplier;
     }
 
     void PlayCardSound(string card)
@@ -131,6 +130,26 @@ public class GameController : MonoBehaviour
         PausePanel.SetActive(true);
         Events.SetMovementDisabled(true);
         Time.timeScale = 0;
+    }
+
+    public void onSettings()
+    {
+        PausePanel.SetActive(false);
+        SettingsPanel.GetComponentInChildren<Slider>().value = MasterVolume;
+        SettingsPanel.SetActive(true);
+    }
+
+    public void SetVolume(float volume)
+    {
+        MasterVolume = volume;
+        RainSound.volume = RainSoundSetVolume * volume;
+    }
+
+    public void onSettingsToPause()
+    {
+        PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
+        SettingsPanel.SetActive(false);
+        PausePanel.SetActive(true);
     }
 
     public void onContinue()
