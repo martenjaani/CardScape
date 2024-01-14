@@ -87,7 +87,35 @@ public class AvaibleCardsScript : MonoBehaviour
         texts[1].text = amountOfCards[i].ToString()+"x";*/
         if (amountOfCards[i] == 0) {
             RemoveEachElement(CardPackObjects[i]);
-        };
+        }
+        else {
+            Vector2 originalScale = script.GetComponent<RectTransform>().transform.localScale;
+            Vector2 squishScale = new Vector2(1f, 0.8f);
+
+            // First, lerp from originalScale to squishScale
+            script.GetComponent<RectTransform>().transform.localScale = Vector2.Lerp(originalScale, squishScale, 0.3f);
+
+            // Now, lerp back from squishScale to originalScale
+            StartCoroutine(ReturnToOriginalScale());
+
+            IEnumerator ReturnToOriginalScale()
+            {
+                float timer = 0f;
+                float duration = 0.3f; // Adjust the duration as needed
+
+                while (timer < duration)
+                {
+                    float t = timer / duration;
+                    script.GetComponent<RectTransform>().transform.localScale = Vector2.Lerp(squishScale, originalScale, t);
+
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                // Ensure it ends at the original scale
+                script.GetComponent<RectTransform>().transform.localScale = originalScale;
+            }
+        }
     }
 
     private void RemoveEachElement(GameObject cardPackObject)
