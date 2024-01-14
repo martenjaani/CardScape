@@ -7,6 +7,8 @@ public class FlowerProjectile : MonoBehaviour
     public float Speed = 5;
     public PlayerMovement Target;
     private Vector3 direction;
+    public float lifeTime;
+    private float endTime;
 
     
 
@@ -14,7 +16,8 @@ public class FlowerProjectile : MonoBehaviour
     {
        
         direction = (Target.transform.position - transform.position).normalized;
-
+        endTime= Time.time + lifeTime;
+        
     }
     // Update is called once per frame
     void Update()
@@ -29,7 +32,7 @@ public class FlowerProjectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        if (!gameObject.GetComponent<Renderer>().isVisible)
+        if (endTime < Time.time)
         {
             Destroy(gameObject);
         }

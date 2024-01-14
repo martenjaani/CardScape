@@ -6,12 +6,13 @@ public class DirectionProjectile : MonoBehaviour
 {
     public float Speed = 5;
     public Vector3 direction;
-
+    public float lifeTime;
+    private float endTime;
 
 
     private void Start()
     {
-
+        endTime = Time.time + lifeTime;
     }
     // Update is called once per frame
     void Update()
@@ -26,7 +27,7 @@ public class DirectionProjectile : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        if (!gameObject.GetComponent<Renderer>().isVisible)
+        if (endTime < Time.time)
         {
             Destroy(gameObject);
         }
