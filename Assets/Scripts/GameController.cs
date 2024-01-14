@@ -132,6 +132,19 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0;
     }
 
+    public void onFinishToSettings()
+    {
+        FinishPanel.SetActive(false);
+        SettingsPanel.GetComponentInChildren<Slider>().value = MasterVolume;
+        SettingsPanel.SetActive(true);
+    }
+
+    public void onSettingsToFinish()
+    {
+        SettingsPanel.SetActive(false);
+        FinishPanel.SetActive(true);
+    }
+
     public void onSettings()
     {
         PausePanel.SetActive(false);
