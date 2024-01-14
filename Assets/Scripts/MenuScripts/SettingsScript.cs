@@ -4,30 +4,33 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class Settings : MonoBehaviour
 {
     public GameObject MainMenuPanel;
     
     private float Volume;
-    private Resolution[] resolutions;
+    private List<Resolution> Resolutions = new List<Resolution>();
 
     private void Start()
     {
-        resolutions = Screen.resolutions;
+        Resolution[] tempResolutions = Screen.resolutions;
         TMP_Dropdown resolutionDropdown = gameObject.GetComponentInChildren<TMP_Dropdown>();
         resolutionDropdown.ClearOptions();
         List<string> resolutionList = new List<string>();
         int currentResolutionIndex = 0;
-        int counter = 0;
-        foreach (Resolution resolution in resolutions)
+        for (int i = 0; i < tempResolutions.Length; i++)
         {
-            resolutionList.Add(resolution.width + " x " + resolution.height);
-            if(resolution.width == Screen.currentResolution.width && resolution.height == Screen.currentResolution.height)
+            if (tempResolutions[i].refreshRateRatio.value != Screen.currentResolution.refreshRateRatio.value)
+              continue;
+            resolutionList.Add(tempResolutions[i].width + " x " + tempResolutions[i].height);
+            Resolutions.Add(tempResolutions[i]);
+            if (tempResolutions[i].width == Screen.currentResolution.width && tempResolutions[i].height == Screen.currentResolution.height)
             {
-                currentResolutionIndex = counter;
+                currentResolutionIndex = i;
             }
-            counter++;
         }
         resolutionDropdown.AddOptions(resolutionList);
         resolutionDropdown.value = currentResolutionIndex;
@@ -64,7 +67,7 @@ public class Settings : MonoBehaviour
 
     public void SetResolution(int index)
     {
-        Resolution resolution = resolutions[index];
+        Resolution resolution = Resolutions[index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 }

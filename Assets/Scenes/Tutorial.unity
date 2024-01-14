@@ -312,13 +312,13 @@ MonoBehaviour:
   CardPackPrefab: {fileID: 6626653537311196411, guid: e4cbfbb27e2c3ec428d097c7c251d050, type: 3}
   CardPacks:
   - cardData: {fileID: 11400000, guid: 8aec37c6d9631b043944a6ffd0388a77, type: 2}
-    amountOfCards: 2
+    amountOfCards: 1
   - cardData: {fileID: 11400000, guid: 407535da2e18f1146a4d997129a32800, type: 2}
     amountOfCards: 1
   - cardData: {fileID: 11400000, guid: e749c4998d20ed8478c7009fb314fc0d, type: 2}
     amountOfCards: 1
   - cardData: {fileID: 11400000, guid: e93971239d234e44682f54a342252f92, type: 2}
-    amountOfCards: 1
+    amountOfCards: 2
 --- !u!114 &49183723
 MonoBehaviour:
   m_ObjectHideFlags: 0
