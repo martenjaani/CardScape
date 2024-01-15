@@ -22,7 +22,9 @@ public class GameController : MonoBehaviour
 
     public float MasterVolume = 10.0f;
     public AudioSource RainSound;
+    public AudioSource StepsSound;
     private float RainSoundSetVolume;
+    private float StepsSoundSetVolume;
     public AudioClipGroup Dash;
     public AudioClipGroup Landing;
     public AudioClipGroup Death;
@@ -51,6 +53,7 @@ public class GameController : MonoBehaviour
     {
         MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
         RainSoundSetVolume = RainSound.volume;
+        StepsSoundSetVolume = StepsSound.volume;
         SetVolume(MasterVolume);
         startTime = Time.time;
         timerStarted = true;
@@ -156,6 +159,7 @@ public class GameController : MonoBehaviour
     {
         MasterVolume = volume;
         RainSound.volume = RainSoundSetVolume * volume;
+        StepsSound.volume = StepsSoundSetVolume * volume;
     }
 
     public void onSettingsToPause()
