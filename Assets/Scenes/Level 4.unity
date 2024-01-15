@@ -13869,7 +13869,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.5879617, y: -3.72, z: -10.01}
+  m_LocalPosition: {x: -4.217638, y: -3.72, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14492,7 +14492,7 @@ PrefabInstance:
     - target: {fileID: 5764061443905899441, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: main_camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1942671753}
     - target: {fileID: 5764061443905899441, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: wallJumpPower
       value: 16
@@ -34176,7 +34176,7 @@ Transform:
   m_GameObject: {fileID: 1942671750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09683752, y: -3.8615098, z: -10.01}
+  m_LocalPosition: {x: 2.8628774, y: -3.8608298, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
