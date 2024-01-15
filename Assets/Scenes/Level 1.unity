@@ -3424,7 +3424,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.199305, y: -3.72, z: -10.01}
+  m_LocalPosition: {x: -4.7973948, y: -3.72, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -31630,7 +31630,7 @@ PrefabInstance:
     - target: {fileID: 5764061443905899441, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: main_camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 197471458}
     - target: {fileID: 5764061443905899441, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: wallJumpPower
       value: 16
@@ -31642,6 +31642,30 @@ PrefabInstance:
     - target: {fileID: 6058351766485876328, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_UseWorldSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_ApplyActiveColorSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_Parameters.textureMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_Parameters.widthMultiplier
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 7702145778085762129, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: m_LocalPosition.x
