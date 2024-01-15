@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
     private bool movementDisabled = false;
     private bool isDead = false;
     private bool isGrappling = false;
-    private bool playerSingleDeath = true;
+    //private bool playerSingleDeath = true;
     private float horizontalMovement;
     private bool facingRight = true;
     private float speed;
@@ -515,6 +515,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
         Events.PlaySound("Death");
         setMovementDisabled(true);
+        animator.SetBool("isJumping", false);
         rb.simulated = false;
          
         this.GetComponent<BoxCollider2D>().enabled = false;
@@ -523,9 +524,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private void checkDeath()
     {
-        if (isDead && playerSingleDeath)
+        if (isDead )
         {
-            playerSingleDeath = false;
             isDead = false;
             animator.SetTrigger("Dead");
             
