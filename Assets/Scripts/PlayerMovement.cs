@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -36,16 +37,17 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Grapple")]
     public GrapplingRope grappleRope;
-    public Camera main_camera;    
+    public Camera main_camera;
     public Transform firePoint;     // See määrab laskmise alustuskoha
     [SerializeField] private float maxDistance = 20f;
+    [SerializeField] private float minDistance = 0f;
     [SerializeField] private bool launchToPoint = false;
     [SerializeField] private float launchSpeed = 1f;
     [SerializeField] private float targetDistance = 3f;
     [SerializeField] private float targetFrequency = 1f;
-
+    
     [HideInInspector] public Vector2 grapplePoint;      // Grapple abi
-    [HideInInspector] public Vector2 grappleDistanceVector;
+
 
     private bool activatedDoubleJump; //Kontrollimaks et kas double jump tehti v�i mitte.
     public bool ActivatedDoubleJump
@@ -56,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool movementDisabled = false;
     private bool isDead = false;
+    private bool isGrappling = false;
     private bool playerSingleDeath = true;
     private float horizontalMovement;
     private bool facingRight = true;
@@ -64,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private BoxCollider2D collider;
     private Animator animator;
-    private SpringJoint2D springJoint2D;
+    private LineRenderer lineRenderer;
 
     [Header("Misc")]
     [SerializeField] private LayerMask Ground;
@@ -74,13 +77,12 @@ public class PlayerMovement : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
-        springJoint2D = GetComponent<SpringJoint2D>();
+        lineRenderer = GetComponent<LineRenderer>();
 
         rb.gravityScale = gravityMultiplier;
         ActivatedDoubleJump = false;
 
         grappleRope.enabled = false;    //Grapple stuff
-        springJoint2D.enabled = false;  //Grapple stuff
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta h�ppaks
         Events.DashCardActivated += dash;
@@ -118,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
         wallSlideLogic();       // Peab olema peale jump logicut for reasons
 
-        //grappleLogic();           // Kuna praegu lic ei tööta, siis get it outta here
+        grappleLogic();           // Kuna praegu lic ei tööta, siis get it outta here
 
         dashLogic();
 
@@ -165,14 +167,6 @@ public class PlayerMovement : MonoBehaviour
             return false;
         }
         return Input.GetButtonDown("Fire1");
-    }
-    private bool getGrappleButtonUp()
-    {
-        if (movementDisabled)
-        {
-            return false;
-        }
-        return Input.GetButtonUp("Fire1");
     }
 
     private void wallSlideLogic()
@@ -307,17 +301,30 @@ public class PlayerMovement : MonoBehaviour
         ActivatedWallJump = false;
     }
 
-    private void grappleLogic()     // I have no clue what the fuck is happening
+    private void grappleLogic()
     {
-        if (getGrappleButtonDown())
+        if (getGrappleButtonDown())     // See peaks kaardi nupu vajutusel toimuma
         {
             SetGrapplePoint();
         }
-        else if (getGrappleButtonUp())
+        else if (isGrappling)
         {
-            grappleRope.enabled = false;
-            springJoint2D.enabled = false;
-            rb.gravityScale = 6;
+            if (launchToPoint) //&& grappleRope.isGrappling)
+            {
+                rb.gravityScale = 0;
+
+                Vector2 prevPos = this.transform.position;
+                this.transform.position = Vector2.LerpUnclamped(this.transform.position, grapplePoint, Time.deltaTime * launchSpeed);       // Doomed shit idk
+
+                RaycastHit2D hit = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size*0.92f, 0f, grapplePoint, 0.1f, Ground);   // Kontrollime, et ei läheks millelegi pihta.
+
+                DrawRope();
+
+                if (hit || Vector2.Distance(prevPos,this.transform.position)<0.005f)
+                {
+                    EndGrapple();
+                }
+            }
         }
     }
 
@@ -327,43 +334,27 @@ public class PlayerMovement : MonoBehaviour
         if (Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, LayerMask.NameToLayer("Ground")))
         {
             RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
-            if (true)            // Paneme, et grappbleb ainult leveli objektidele
+            if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance && Vector2.Distance(hit.point, firePoint.position) >= minDistance)
             {
-                if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance)
-                {
-                    grapplePoint = hit.point;
-                    grappleDistanceVector = grapplePoint - (Vector2)firePoint.position;         // it all kinda works, but not at all.
-                    grappleRope.enabled = true;
-
-                }
+                grapplePoint = hit.point;
+                grappleRope.enabled = true;
+                isGrappling = true;
+                movementDisabled = true;
+                rb.velocity = Vector2.zero;
             }
-
         }
     }
 
-    public void Grapple()       // Teostame grapple
+    public void EndGrapple()
     {
-        springJoint2D.autoConfigureDistance = false;        // peab removema springjoint ma 100% sure et see nussibki, aga no ei mõjuta game rn
-        if (!launchToPoint)
-        {
-            springJoint2D.distance = targetDistance;
-            springJoint2D.frequency = targetFrequency;
-        }
-        if (!launchToPoint)
-        {
-            springJoint2D.connectedAnchor = grapplePoint;
-            springJoint2D.enabled = true;
-        }
-        else
-        {
-            springJoint2D.connectedAnchor = grapplePoint;
+        isGrappling = false;
+        grappleRope.enabled = false;
+        movementDisabled = false;
 
-            Vector2 distanceVector = firePoint.position - this.transform.position;
+        if (facingRight) rb.velocity = new Vector2(0, 9f);
+        else rb.velocity = new Vector2(0, 9f);
 
-            springJoint2D.distance = distanceVector.magnitude;
-            springJoint2D.frequency = launchSpeed;
-            springJoint2D.enabled = true;
-        }
+        rb.gravityScale = gravityMultiplier;
     }
 
     private void dash(bool cardActivation)
@@ -563,12 +554,23 @@ public class PlayerMovement : MonoBehaviour
         Events.RestartLevel();
     }
 
+    void DrawRope()
+    {
+        lineRenderer.SetPosition(0, firePoint.position);
+        lineRenderer.SetPosition(1, grapplePoint);
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (firePoint != null)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(firePoint.position, maxDistance);
+        }
+        if (firePoint != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(firePoint.position, minDistance);
         }
     }
 }
