@@ -515,12 +515,15 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
         Events.PlaySound("Death");
         setMovementDisabled(true);
-
+        rb.simulated = false;
+         
+        this.GetComponent<BoxCollider2D>().enabled = false;
+  
         isDead = true;
     }
     private void checkDeath()
     {
-        if (isDead && onGround() && playerSingleDeath)
+        if (isDead && playerSingleDeath)
         {
             playerSingleDeath = false;
             isDead = false;
