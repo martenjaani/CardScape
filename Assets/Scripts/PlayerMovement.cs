@@ -36,16 +36,15 @@ public class PlayerMovement : MonoBehaviour
     public bool isWallSliding = false;
 
     [Header("Grapple")]
-    public GrapplingRope grappleRope;
+    //public GrapplingRope grappleRope;
     public Camera main_camera;
     public Transform firePoint;     // See määrab laskmise alustuskoha
     [SerializeField] private float maxDistance = 20f;
     [SerializeField] private float minDistance = 0f;
     [SerializeField] private bool launchToPoint = false;
     [SerializeField] private float launchSpeed = 1f;
-    [SerializeField] private float targetDistance = 3f;
-    [SerializeField] private float targetFrequency = 1f;
-    
+    [SerializeField] private float hopStrength = 1f;
+
     [HideInInspector] public Vector2 grapplePoint;      // Grapple abi
 
 
@@ -59,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     private bool movementDisabled = false;
     private bool isDead = false;
     private bool isGrappling = false;
-    private bool playerSingleDeath = true;
+    //private bool playerSingleDeath = true;
     private float horizontalMovement;
     private bool facingRight = true;
     private float speed;
@@ -82,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityMultiplier;
         ActivatedDoubleJump = false;
 
-        grappleRope.enabled = false;    //Grapple stuff
+        lineRenderer.enabled = false;
 
         Events.DoubleJumpCardActivated += jump; //EventListener, et kui Event scriptis DoubleJumpCardActivated invokitakse, siis ta h�ppaks
         Events.DashCardActivated += dash;
@@ -92,6 +91,8 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetPlayerOnGround += onGround;
         Events.OnSetMovementDisabled += setMovementDisabled;
         Events.WallJumpCardActivated += wallJump;
+        Events.HookshotCardActivated += SetGrapplePoint;
+        Events.OnGetIsGrappling += getIsGrappling;
     }
 
     private void OnDestroy()
@@ -104,6 +105,8 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetPlayerOnGround -= onGround;
         Events.OnSetMovementDisabled -= setMovementDisabled;
         Events.WallJumpCardActivated -= wallJump;
+        Events.HookshotCardActivated -= SetGrapplePoint;
+        Events.OnGetIsGrappling -= getIsGrappling;
     }
 
     void Update()
@@ -232,7 +235,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (rb.velocity.y == 0f && !isDashing && !isUltraDashing)         // Kui oled maa peal. siis tagasi �igele gravitatsioonile.
         {
-            if (rb.gravityScale != gravityMultiplier) Events.PlaySound("Landing");
+            if (rb.gravityScale != gravityMultiplier && !isGrappling) Events.PlaySound("Landing");
             rb.gravityScale = gravityMultiplier;
             isFalling = false;
             animator.SetBool("isFalling", false);
@@ -303,18 +306,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void grappleLogic()
     {
-        if (getGrappleButtonDown())     // See peaks kaardi nupu vajutusel toimuma
+        if (isGrappling && !isDead)
         {
-            SetGrapplePoint();
-        }
-        else if (isGrappling)
-        {
-            if (launchToPoint) //&& grappleRope.isGrappling)
+            if (launchToPoint)
             {
                 rb.gravityScale = 0;
 
                 Vector2 prevPos = this.transform.position;
-                this.transform.position = Vector2.LerpUnclamped(this.transform.position, grapplePoint, Time.deltaTime * launchSpeed);       // Doomed shit idk
+                this.transform.position = Vector2.Lerp(this.transform.position, grapplePoint, Time.deltaTime * launchSpeed);       // Doomed shit idk
 
                 RaycastHit2D hit = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size*0.92f, 0f, grapplePoint, 0.1f, Ground);   // Kontrollime, et ei läheks millelegi pihta.
 
@@ -330,32 +329,50 @@ public class PlayerMovement : MonoBehaviour
 
     public void SetGrapplePoint()
     {
-        Vector2 distanceVector = main_camera.ScreenToWorldPoint(Input.mousePosition) - firePoint.position;  // Leiame mis suunda lasta
-        if (Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, LayerMask.NameToLayer("Ground")))
+        if (onGround())
         {
-            RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
-            if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance && Vector2.Distance(hit.point, firePoint.position) >= minDistance)
+            if (main_camera.ScreenToWorldPoint(Input.mousePosition).y > rb.position.y + 0.1f)
             {
-                grapplePoint = hit.point;
-                grappleRope.enabled = true;
-                isGrappling = true;
-                movementDisabled = true;
-                rb.velocity = Vector2.zero;
+                Grapple();
             }
+        }
+        else
+        {
+            Grapple();
+        }
+    }
+
+    public void Grapple()
+    {
+        Vector2 distanceVector = main_camera.ScreenToWorldPoint(Input.mousePosition) - firePoint.position;  // Leiame mis suunda lasta
+
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
+        if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance && Vector2.Distance(hit.point, firePoint.position) >= minDistance)
+        {
+            Events.PlaySound("Jump");   // PEAB GRAPPLE SOUND PANEMA
+            animator.SetBool("isGrappling", true);
+            animator.SetBool("isJumping", false);
+            grapplePoint = hit.point;
+            isGrappling = true;
+            lineRenderer.enabled = true;
+            movementDisabled = true;
+            rb.velocity = Vector2.zero;
         }
     }
 
     public void EndGrapple()
     {
         isGrappling = false;
-        grappleRope.enabled = false;
         movementDisabled = false;
+        lineRenderer.enabled=false;
+        animator.SetBool("isGrappling", false);
 
-        if (facingRight) rb.velocity = new Vector2(0, 9f);
-        else rb.velocity = new Vector2(0, 9f);
+        if (facingRight) rb.velocity = new Vector2(0, hopStrength);
+        else rb.velocity = new Vector2(0, hopStrength);
 
         rb.gravityScale = gravityMultiplier;
     }
+
 
     private void dash(bool cardActivation)
     {
@@ -515,14 +532,19 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isDashing", false);   // Sätime dashing asjad falseks
         Events.PlaySound("Death");
         setMovementDisabled(true);
-
+        animator.SetBool("isJumping", false);
+        rb.simulated = false;
+        animator.SetBool("isGrappling", false);
+        isGrappling = false;
+         
+        this.GetComponent<BoxCollider2D>().enabled = false;
+  
         isDead = true;
     }
     private void checkDeath()
     {
-        if (isDead && onGround() && playerSingleDeath)
+        if (isDead )
         {
-            playerSingleDeath = false;
             isDead = false;
             animator.SetTrigger("Dead");
             
@@ -532,6 +554,11 @@ public class PlayerMovement : MonoBehaviour
     private bool getMovementDisabled()
     {
         return movementDisabled;
+    }
+
+    private bool getIsGrappling()
+    {
+        return isGrappling;
     }
 
     private void DisableMovementFor(float time)

@@ -58,6 +58,17 @@ public class CardScript : MonoBehaviour
             if (cardName.text.Equals("Ultra Dash"))
                 Events.UltraDash();
 
+            if (cardName.text.Equals("Hook Shot"))
+            {
+                Events.Hookshot();
+
+                if (!Events.GetIsGrappling())
+                {
+                    return;
+                }
+            }
+            
+
             if (cardName.text.Equals("Wall Jump"))
             {
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
