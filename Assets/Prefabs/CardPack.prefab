@@ -87,7 +87,7 @@ MonoBehaviour:
   m_GroupMaxId: 0
   m_PositionMode: 1
   m_AutoScaling: 0
-  m_AutoScalingMode: 1
+  m_AutoScalingMode: 0
   m_ResetScaleOnEnable: 0
 --- !u!114 &1610035787498676761
 MonoBehaviour:
