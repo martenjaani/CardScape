@@ -10,6 +10,8 @@ public class CanvasScript : MonoBehaviour
     public GameObject MainMenuPanel;
     public GameObject LevelSelectorPanel;
     public AudioClipGroup ClickSound;
+    public Animator transition;
+    public float transitionTime = 1f;
 
 
     private void Awake()
@@ -28,11 +30,20 @@ public class CanvasScript : MonoBehaviour
     public void onStartLevel(LevelData data)
     {
         GameController.sceneLoaded += onSceneLoaded;
-        SceneManager.LoadScene(data.SceneName);       
+        StartCoroutine(onStartLevelCoroutine(data));       
+    }
+
+    IEnumerator onStartLevelCoroutine(LevelData data)
+    {
+        transition.SetTrigger("Start");
+        yield return new WaitForSeconds(transitionTime);
+        SceneManager.LoadScene(data.SceneName);
     }
 
     public void onSceneLoaded()
     {
+        transition.SetTrigger("End");
+        //transition.gameObject.GetComponent<CanvasGroup>().alpha = 0f;
         GameController.sceneLoaded -= onSceneLoaded;
         MenuLoaded.menuLoaded += onMenuLoaded;
         LevelSelectorPanel.SetActive(false);
