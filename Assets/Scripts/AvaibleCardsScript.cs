@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class AvaibleCardsScript : MonoBehaviour
 {
@@ -17,7 +19,6 @@ public class AvaibleCardsScript : MonoBehaviour
 
     public CardScript CardPrefab;
     public GameObject CardPackPrefab;
-    private RectTransform AmountPanel;
 
     public List<CardPack> CardPacks = new List<CardPack>();
 
@@ -36,11 +37,17 @@ public class AvaibleCardsScript : MonoBehaviour
         RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
         rectTransform.sizeDelta = new Vector2(5 * (CardPacks.Count + 1) + 70 * CardPacks.Count, 130);
 
+
         for (int i = 0; i < CardPacks.Count; i++)
         {
-            CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
-            AmountPanel = CardPackObjects[i].GetComponentInChildren<RectTransform>();
-            images.Add(AmountPanel.GetComponentsInChildren<RectTransform>());
+            CardPackObjects.Add(Instantiate(CardPackPrefab, transform));
+            //CardPackObjects.Add(transform.GetChild(i).gameObject);
+            Transform panel = CardPackObjects[i].transform.GetChild(0).GetChild(0); //Gets the first child of the CardPack object aka the amount of use panel
+            int childCount = panel.childCount; //Gets the use image count which should always be 5
+            RectTransform[] tempTransforms = new RectTransform[childCount]; //Empty array for each image
+            for(int j = 0; j < childCount; j++) //Adds the images to the array
+                tempTransforms[j] = panel.GetChild(j).GetComponentInChildren<RectTransform>();
+            images.Add(tempTransforms); //Adds the images array to images list which contains image arrays for all cardpacks
 
             /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
             texts[0].text = Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])")[Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])").Length-1];
@@ -50,10 +57,12 @@ public class AvaibleCardsScript : MonoBehaviour
             texts[0].fontSize = 14.5F;
             texts[1].text = CardPacks[i].amountOfCards.ToString() + "x";
             texts[1].fontSize = 14.5F;*/
-            if (CardPacks[i].amountOfCards > 5)
+            if (CardPacks[i].amountOfCards > 5)  //Kui üle viie pantud paneb viie peale et tervet asja ära ei fuck upiks
                 CardPacks[i].amountOfCards = 5;
 
-            SetAmount(CardPacks[i].amountOfCards, i);
+            for (int j = 5 - CardPacks[i].amountOfCards - 1; j >= 0; j--) //disableib üleliigsed amount märgid
+                images[i][j].gameObject.GetComponent<Image>().enabled = false;
+
             Cards.Add(GameObject.Instantiate(CardPrefab, CardPackObjects[i].transform));
             Cards[i].cardData = CardPacks[i].cardData;
             if (Cards[i].cardData.keyCode.ToString().Equals("LeftShift"))
@@ -65,30 +74,43 @@ public class AvaibleCardsScript : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        /*foreach (KeyCode keyCode in KeyCodes)
-        {
-            if (Input.GetKeyDown(keyCode))
-            {
-                int i = KeyCodes.IndexOf(keyCode);
-                if (amountOfCards[i] > 0)
-                    Cards[i].Pressed();
-            }
-        }*/
-    }
-
     public void CardActivated(CardScript script)
     {
         int i = Cards.IndexOf(script);
         amountOfCards[i]--;
-        SetAmount(amountOfCards[i], i);
+        RemoveUse(amountOfCards[i], i);
+
         /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
         texts[1].text = amountOfCards[i].ToString()+"x";*/
-        if (amountOfCards[i] == 0) {
-            RemoveEachElement(CardPackObjects[i]);
+
+        if (amountOfCards[i] == 0) { //Kaardi eemaldamine
+            Vector2 originalScale = script.GetComponent<RectTransform>().transform.localScale;
+            Vector2 squishScale = new Vector2(1f, 0f);
+
+            // Now, lerp back from squishScale to originalScale
+            StartCoroutine(ToZero());
+
+            IEnumerator ToZero()
+            {
+                float timer = 0f;
+                float duration = 0.3f; // Adjust the duration as needed
+
+                while (timer < duration)
+                {
+                    float t = timer / duration;
+                    script.GetComponent<RectTransform>().transform.localScale = Vector2.Lerp(originalScale, squishScale, t);
+
+                    timer += Time.deltaTime;
+                    yield return null;
+                }
+
+                // Ensure it ends at the original scale
+                script.GetComponent<RectTransform>().transform.localScale = originalScale;
+                RemoveEachElement(CardPackObjects[i]);
+            }
         }
-        else {
+
+        else { //Kaardi squishimine ja tagasi kuna kasutusi veel
             Vector2 originalScale = script.GetComponent<RectTransform>().transform.localScale;
             Vector2 squishScale = new Vector2(1f, 0.8f);
 
@@ -127,17 +149,14 @@ public class AvaibleCardsScript : MonoBehaviour
         }
     }
 
-    private void SetAmount(int amount, int index)
+    private void RemoveUse(int amount, int index)
     {
-        foreach (RectTransform image in images[index])
-            image.gameObject.SetActive(false);
-        for (int i = 0; i < amount + 2; i++)
-            images[index][i].gameObject.SetActive(true);
-    }
-
-    public void FindScript()
-    {
-
+        RectTransform image = images[index][4-amount];
+        GameObject imageObject = image.gameObject;
+        ParticleSystem particleSystem = imageObject.GetComponent<ParticleSystem>();
+        particleSystem.Play();
+        Image imageImage = imageObject.GetComponent<Image>();
+        imageImage.enabled = false;
     }
 }
 

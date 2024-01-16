@@ -9,6 +9,7 @@ public class CanvasScript : MonoBehaviour
     public static CanvasScript instance;
     public GameObject MainMenuPanel;
     public GameObject LevelSelectorPanel;
+    public AudioClipGroup ClickSound;
 
 
     private void Awake()

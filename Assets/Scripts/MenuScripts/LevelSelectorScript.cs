@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelSelectorScript : MonoBehaviour
 {
     public GameObject MainMenuPanel;
+    public GameObject SettingsMenuPanel;
     public Button MainMenuButton;
     public Button StartLevelButton;
     public Button NextLevelButton;
@@ -16,6 +16,10 @@ public class LevelSelectorScript : MonoBehaviour
     public Image LevelImage;
     public TextMeshProUGUI LevelName;
     public TextMeshProUGUI BestLevelTime;
+    public GameObject LevelImagePrefab;
+    
+    private PositionAnimation ToRightAnimation;
+    private PositionAnimation ToLeftAnimation;
 
     public List<LevelData> levelDataList = new List<LevelData>();
     private LevelData currentLevelData;
@@ -24,10 +28,18 @@ public class LevelSelectorScript : MonoBehaviour
 
     public static Action<LevelData> StartLevel;
 
+    private CanvasScript canvas;
+    private Settings settings;
+
     void Start()
     {
+        canvas = transform.parent.GetComponent<CanvasScript>();
+        settings = SettingsMenuPanel.GetComponent<Settings>();
+
         Events.nextLevel += NextLevelCalled;
         Events.backToLevelSelector += BackToLevelSelectorCalled;
+
+        SetPostitionScripts(LevelImage.gameObject);
 
         MainMenuButton.onClick.AddListener(onMainMenu);
         StartLevelButton.onClick.AddListener(onStartLevel);
@@ -41,32 +53,53 @@ public class LevelSelectorScript : MonoBehaviour
             NextLevelButton.gameObject.SetActive(true);
 
         currentLevelIndex = 0;
-        if (levelDataList.Count > 0 )
-            currentLevelData = levelDataList[0];
-        else
-            currentLevelData = null;
+        currentLevelData = levelDataList[currentLevelIndex];
+        setLevelInfo(currentLevelData);
+        LevelImage.sprite = currentLevelData.IconSprite;
+    }
 
-        if (currentLevelData != null)
-            setLevelInfo(currentLevelData);
+    private void SetPostitionScripts(GameObject LevelImageObject)
+    {
+        PositionAnimation[] positionAnimations = LevelImageObject.GetComponentsInChildren<PositionAnimation>();
+        ToRightAnimation = positionAnimations[0];
+        ToLeftAnimation = positionAnimations[1];
+        ToRightAnimation.ToRight = true;
+        ToLeftAnimation.ToRight = false;
     }
 
     public void onMainMenu()
     {
+        canvas.ClickSound.Play(settings.Volume);
         MainMenuPanel.SetActive(true);
         gameObject.SetActive(false);
     }
 
     public void onStartLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
         StartLevel?.Invoke(currentLevelData);
     }
 
     public void onNextLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
+
+        ToLeftAnimation.enabled = true;
+        ToLeftAnimation.DestroyOnEnd = true;
+
         int levelIndex = currentLevelIndex + 1;
         currentLevelIndex++;
         currentLevelData = levelDataList[levelIndex];
+
+        GameObject levelImageObject = Instantiate(LevelImagePrefab, transform);
+        LevelImage = levelImageObject.GetComponent<Image>();
+        LevelImage.sprite = currentLevelData.IconSprite;
+        levelImageObject.transform.localPosition = new Vector3(800, 0);
+        SetPostitionScripts(levelImageObject);
+        ToLeftAnimation.enabled = true;
+        
         setLevelInfo(currentLevelData);
+        
         if (levelIndex == levelDataList.Count - 1)
             NextLevelButton.gameObject.SetActive(false);
         if (levelIndex == 1)
@@ -86,9 +119,22 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void onPreviousLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
+
+        ToRightAnimation.enabled = true;
+        ToRightAnimation.DestroyOnEnd = true;
+        
         int levelIndex = currentLevelIndex - 1;
         currentLevelIndex--;
         currentLevelData = levelDataList[levelIndex];
+
+        GameObject levelImageObject = Instantiate(LevelImagePrefab, transform);
+        LevelImage = levelImageObject.GetComponent<Image>();
+        LevelImage.sprite = currentLevelData.IconSprite;
+        levelImageObject.transform.localPosition = new Vector3(-800, 0);
+        SetPostitionScripts(levelImageObject);
+        ToRightAnimation.enabled = true;
+
         setLevelInfo(currentLevelData);
         if (levelIndex == 0)
             PreviousLevelButton.gameObject.SetActive(false);
@@ -104,7 +150,6 @@ public class LevelSelectorScript : MonoBehaviour
     public void setLevelInfo(LevelData data)
     {
         LevelName.text = data.LevelName;
-        LevelImage.sprite = data.IconSprite;
         float bestTime = PlayerPrefs.GetFloat(currentLevelData.SceneName + "BestTime");
         if (bestTime == 0)
             BestLevelTime.text = "Unfinished";
@@ -118,6 +163,7 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void DeleteBestTimeData()
     {
+        canvas.ClickSound.Play(settings.Volume);
         PlayerPrefs.DeleteKey(currentLevelData.SceneName + "BestTime");
         setLevelInfo(currentLevelData);
     }
