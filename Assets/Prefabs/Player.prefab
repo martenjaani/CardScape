@@ -64,7 +64,7 @@ MonoBehaviour:
   isWallSliding: 0
   main_camera: {fileID: 0}
   firePoint: {fileID: 9056790089298845606}
-  maxDistance: 8
+  maxDistance: 9
   minDistance: 2
   launchToPoint: 1
   launchSpeed: 8
