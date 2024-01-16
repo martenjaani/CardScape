@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class LevelSelectorScript : MonoBehaviour
 {
     public GameObject MainMenuPanel;
+    public GameObject SettingsMenuPanel;
     public Button MainMenuButton;
     public Button StartLevelButton;
     public Button NextLevelButton;
@@ -27,8 +28,14 @@ public class LevelSelectorScript : MonoBehaviour
 
     public static Action<LevelData> StartLevel;
 
+    private CanvasScript canvas;
+    private Settings settings;
+
     void Start()
     {
+        canvas = transform.parent.GetComponent<CanvasScript>();
+        settings = SettingsMenuPanel.GetComponent<Settings>();
+
         Events.nextLevel += NextLevelCalled;
         Events.backToLevelSelector += BackToLevelSelectorCalled;
 
@@ -62,17 +69,21 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void onMainMenu()
     {
+        canvas.ClickSound.Play(settings.Volume);
         MainMenuPanel.SetActive(true);
         gameObject.SetActive(false);
     }
 
     public void onStartLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
         StartLevel?.Invoke(currentLevelData);
     }
 
     public void onNextLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
+
         ToLeftAnimation.enabled = true;
         ToLeftAnimation.DestroyOnEnd = true;
 
@@ -108,6 +119,8 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void onPreviousLevel()
     {
+        canvas.ClickSound.Play(settings.Volume);
+
         ToRightAnimation.enabled = true;
         ToRightAnimation.DestroyOnEnd = true;
         
@@ -150,6 +163,7 @@ public class LevelSelectorScript : MonoBehaviour
 
     public void DeleteBestTimeData()
     {
+        canvas.ClickSound.Play(settings.Volume);
         PlayerPrefs.DeleteKey(currentLevelData.SceneName + "BestTime");
         setLevelInfo(currentLevelData);
     }
