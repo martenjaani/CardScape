@@ -23,14 +23,17 @@ public class GameController : MonoBehaviour
     public float MasterVolume = 10.0f;
     public AudioSource RainSound;
     public AudioSource StepsSound;
+    public AudioSource ClickSound;
     private float RainSoundSetVolume;
     private float StepsSoundSetVolume;
+    private float ClickSoundSetVolume;
     public AudioClipGroup Dash;
     public AudioClipGroup Landing;
     public AudioClipGroup Death;
     public AudioClipGroup Jump;
     public AudioClipGroup Complete;
     public AudioClipGroup Projectile;
+    //public AudioClipGroup Click;
 
     public static Action sceneLoaded;
 
@@ -54,6 +57,7 @@ public class GameController : MonoBehaviour
         MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
         RainSoundSetVolume = RainSound.volume;
         StepsSoundSetVolume = StepsSound.volume;
+        ClickSoundSetVolume = ClickSound.volume;
         SetVolume(MasterVolume);
         startTime = Time.time;
         timerStarted = true;
@@ -130,6 +134,7 @@ public class GameController : MonoBehaviour
 
     public void Pause()
     {
+        ClickSound.Play();
         PausePanel.SetActive(true);
         Events.SetMovementDisabled(true);
         Time.timeScale = 0;
@@ -137,6 +142,7 @@ public class GameController : MonoBehaviour
 
     public void onFinishToSettings()
     {
+        ClickSound.Play();
         FinishPanel.SetActive(false);
         SettingsPanel.GetComponentInChildren<Slider>().value = MasterVolume;
         SettingsPanel.SetActive(true);
@@ -144,12 +150,14 @@ public class GameController : MonoBehaviour
 
     public void onSettingsToFinish()
     {
+        ClickSound.Play();
         SettingsPanel.SetActive(false);
         FinishPanel.SetActive(true);
     }
 
     public void onSettings()
     {
+        ClickSound.Play();
         PausePanel.SetActive(false);
         SettingsPanel.GetComponentInChildren<Slider>().value = MasterVolume;
         SettingsPanel.SetActive(true);
@@ -160,10 +168,12 @@ public class GameController : MonoBehaviour
         MasterVolume = volume;
         RainSound.volume = RainSoundSetVolume * volume;
         StepsSound.volume = StepsSoundSetVolume * volume;
+        ClickSound.volume = ClickSoundSetVolume * volume;
     }
 
     public void onSettingsToPause()
     {
+        ClickSound.Play();
         PlayerPrefs.SetFloat("MasterVolume", MasterVolume);
         SettingsPanel.SetActive(false);
         PausePanel.SetActive(true);
@@ -171,6 +181,7 @@ public class GameController : MonoBehaviour
 
     public void onContinue()
     {
+        ClickSound.Play();
         Time.timeScale = 1;
         PausePanel.SetActive(false);
         Events.SetMovementDisabled(false);
@@ -178,17 +189,20 @@ public class GameController : MonoBehaviour
 
     public void onNextLevel()
     {
+        ClickSound.Play();
         Time.timeScale = 1;
         Events.NextLevel();
     }
 
     public void OnRestartButtonClick()
     {
+        ClickSound.Play();
         Restart();
     }
 
     public void onQuit()
     {
+        ClickSound.Play();
         Time.timeScale = 1;
         Events.BackToLevelSelector();
         SceneManager.LoadScene("Menu");
