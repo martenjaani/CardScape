@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class AvaibleCardsScript : MonoBehaviour
 {
@@ -17,7 +18,6 @@ public class AvaibleCardsScript : MonoBehaviour
 
     public CardScript CardPrefab;
     public GameObject CardPackPrefab;
-    private RectTransform AmountPanel;
 
     public List<CardPack> CardPacks = new List<CardPack>();
 
@@ -39,8 +39,12 @@ public class AvaibleCardsScript : MonoBehaviour
         for (int i = 0; i < CardPacks.Count; i++)
         {
             CardPackObjects.Add(GameObject.Instantiate(CardPackPrefab, transform));
-            AmountPanel = CardPackObjects[i].GetComponentInChildren<RectTransform>();
-            images.Add(AmountPanel.GetComponentsInChildren<RectTransform>());
+            Transform panel = CardPackObjects[i].transform.GetChild(0).GetChild(0); //Gets the first child of the CardPack object aka the amount of use panel
+            int childCount = panel.childCount; //Gets the use image count which should always be 5
+            RectTransform[] tempTransforms = new RectTransform[childCount]; //Empty array for each image
+            for(int j = 0; j < childCount; j++) //Adds the images to the array
+                tempTransforms[j] = panel.GetChild(j).GetComponentInChildren<RectTransform>();
+            images.Add(tempTransforms); //Adds the images array to images list which contains image arrays for all cardpacks
 
             /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
             texts[0].text = Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])")[Regex.Split(CardPacks[i].keyCode.ToString(), @"(?<!^)(?=[A-Z])").Length-1];
@@ -82,7 +86,8 @@ public class AvaibleCardsScript : MonoBehaviour
     {
         int i = Cards.IndexOf(script);
         amountOfCards[i]--;
-        SetAmount(amountOfCards[i], i);
+        RemoveUse(amountOfCards[i], i);
+        //SetAmount(amountOfCards[i], i);
         /*TextMeshProUGUI[] texts = CardPackObjects[i].GetComponentsInChildren<TextMeshProUGUI>();
         texts[1].text = amountOfCards[i].ToString()+"x";*/
         if (amountOfCards[i] == 0) {
@@ -131,8 +136,18 @@ public class AvaibleCardsScript : MonoBehaviour
     {
         foreach (RectTransform image in images[index])
             image.gameObject.SetActive(false);
-        for (int i = 0; i < amount + 2; i++)
+        for (int i = 0; i < amount; i++)
             images[index][i].gameObject.SetActive(true);
+    }
+
+    private void RemoveUse(int amount, int index)
+    {
+        RectTransform image = images[index][4-amount];
+        GameObject imageObject = image.gameObject;
+        Image imageImage = imageObject.GetComponent<Image>();
+        imageImage.enabled = false;
+        ParticleSystem particleSystem = imageObject.GetComponent<ParticleSystem>();
+        particleSystem.Play();
     }
 
     public void FindScript()
