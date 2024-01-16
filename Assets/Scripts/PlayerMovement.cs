@@ -91,6 +91,8 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetPlayerOnGround += onGround;
         Events.OnSetMovementDisabled += setMovementDisabled;
         Events.WallJumpCardActivated += wallJump;
+        Events.HookshotCardActivated += SetGrapplePoint;
+        Events.OnGetIsGrappling += getIsGrappling;
     }
 
     private void OnDestroy()
@@ -103,6 +105,8 @@ public class PlayerMovement : MonoBehaviour
         Events.OnGetPlayerOnGround -= onGround;
         Events.OnSetMovementDisabled -= setMovementDisabled;
         Events.WallJumpCardActivated -= wallJump;
+        Events.HookshotCardActivated -= SetGrapplePoint;
+        Events.OnGetIsGrappling -= getIsGrappling;
     }
 
     void Update()
@@ -302,11 +306,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void grappleLogic()
     {
-        if (getGrappleButtonDown())     // See peaks kaardi nupu vajutusel toimuma
-        {
-            SetGrapplePoint();
-        }
-        else if (isGrappling)
+        if (isGrappling && !isDead)
         {
             if (launchToPoint)
             {
@@ -349,7 +349,9 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
         if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance && Vector2.Distance(hit.point, firePoint.position) >= minDistance)
         {
-            Events.PlaySound("Jump");   // Peaks mingi grapple sound vb panema
+            Events.PlaySound("Jump");   // PEAB GRAPPLE SOUND PANEMA
+            animator.SetBool("isGrappling", true);
+            animator.SetBool("isJumping", false);
             grapplePoint = hit.point;
             isGrappling = true;
             lineRenderer.enabled = true;
@@ -363,6 +365,7 @@ public class PlayerMovement : MonoBehaviour
         isGrappling = false;
         movementDisabled = false;
         lineRenderer.enabled=false;
+        animator.SetBool("isGrappling", false);
 
         if (facingRight) rb.velocity = new Vector2(0, hopStrength);
         else rb.velocity = new Vector2(0, hopStrength);
@@ -531,6 +534,8 @@ public class PlayerMovement : MonoBehaviour
         setMovementDisabled(true);
         animator.SetBool("isJumping", false);
         rb.simulated = false;
+        animator.SetBool("isGrappling", false);
+        isGrappling = false;
          
         this.GetComponent<BoxCollider2D>().enabled = false;
   
@@ -549,6 +554,11 @@ public class PlayerMovement : MonoBehaviour
     private bool getMovementDisabled()
     {
         return movementDisabled;
+    }
+
+    private bool getIsGrappling()
+    {
+        return isGrappling;
     }
 
     private void DisableMovementFor(float time)

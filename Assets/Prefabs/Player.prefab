@@ -68,8 +68,7 @@ MonoBehaviour:
   minDistance: 2
   launchToPoint: 1
   launchSpeed: 8
-  targetDistance: 0
-  targetFrequency: 0
+  hopStrength: 9
   grapplePoint: {x: 0, y: 0}
   Ground:
     serializedVersion: 2

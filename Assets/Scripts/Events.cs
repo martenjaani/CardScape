@@ -24,6 +24,11 @@ public class Events
     public static event Action WallJumpCardActivated;
     public static void WallJump() => WallJumpCardActivated?.Invoke();
 
+    public static event Action HookshotCardActivated;
+    public static void Hookshot() => HookshotCardActivated?.Invoke();
+
+    public static event Func<bool> OnGetIsGrappling;
+    public static bool GetIsGrappling() => OnGetIsGrappling?.Invoke() ?? false;
 
     public static event Action OnRestartLevel;
     public static void RestartLevel() => OnRestartLevel?.Invoke();
