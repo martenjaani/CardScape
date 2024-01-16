@@ -153,10 +153,10 @@ public class AvaibleCardsScript : MonoBehaviour
     {
         RectTransform image = images[index][4-amount];
         GameObject imageObject = image.gameObject;
-        Image imageImage = imageObject.GetComponent<Image>();
-        imageImage.enabled = false;
         ParticleSystem particleSystem = imageObject.GetComponent<ParticleSystem>();
         particleSystem.Play();
+        Image imageImage = imageObject.GetComponent<Image>();
+        imageImage.enabled = false;
     }
 }
 
