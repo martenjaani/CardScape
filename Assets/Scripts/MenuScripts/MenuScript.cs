@@ -14,6 +14,8 @@ public class MenuScript : MonoBehaviour
     {
         canvas = transform.parent.GetComponent<CanvasScript>();
         settings = SettingsMenuPanel.GetComponent<Settings>();
+        settings.gameObject.SetActive(false);
+        LevelSelectorPanel.SetActive(false);
     }
 
     public void onLevelSelectorButton()
