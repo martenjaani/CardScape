@@ -15,4 +15,4 @@ MonoBehaviour:
   LevelName: Level 2
   SceneName: Level 2
   BestTime: maybe
-  IconSprite: {fileID: -6583042440137585631, guid: 95216ae6584ba174fa48ec4f87a5488b, type: 3}
+  IconSprite: {fileID: 21300000, guid: a76c7cf52cdbbd14d9c620ec57ded4b5, type: 3}
