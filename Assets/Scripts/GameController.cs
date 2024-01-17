@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
     public AudioClipGroup Jump;
     public AudioClipGroup Complete;
     public AudioClipGroup Projectile;
+    public AudioClipGroup Grapple;
     //public AudioClipGroup Click;
 
     public static Action sceneLoaded;
@@ -100,6 +101,8 @@ public class GameController : MonoBehaviour
                 Complete.Play(MasterVolume); break;
             case "Projectile":  
                 Projectile.Play(MasterVolume); break;
+            case "Grapple":
+                Grapple.Play(MasterVolume); break;
         }
     }
 

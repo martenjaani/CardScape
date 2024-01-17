@@ -4725,6 +4725,7 @@ MonoBehaviour:
   Jump: {fileID: 11400000, guid: 25fc241e3cd7a1e4a954092ae7ab0464, type: 2}
   Complete: {fileID: 11400000, guid: 01afbdb58e70f2f4e9928657a5e36bd6, type: 2}
   Projectile: {fileID: 11400000, guid: 2a91ff2ee799222478da2519c413817e, type: 2}
+  Grapple: {fileID: 11400000, guid: b23c1342b821fba40be416771e2cbb43, type: 2}
 --- !u!114 &783920794407567908
 MonoBehaviour:
   m_ObjectHideFlags: 0

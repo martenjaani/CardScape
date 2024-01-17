@@ -349,7 +349,7 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(firePoint.position, distanceVector.normalized, maxDistance, 8);        // Otsime, kas grapple sai millelegi pihta
         if (Vector2.Distance(hit.point, firePoint.position) <= maxDistance && Vector2.Distance(hit.point, firePoint.position) >= minDistance)
         {
-            Events.PlaySound("Jump");   // PEAB GRAPPLE SOUND PANEMA
+            Events.PlaySound("Grapple");   // PEAB GRAPPLE SOUND PANEMA
             animator.SetBool("isGrappling", true);
             animator.SetBool("isJumping", false);
             grapplePoint = hit.point;
