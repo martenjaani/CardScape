@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class GameController : MonoBehaviour
 {
@@ -131,7 +133,18 @@ public class GameController : MonoBehaviour
     {
         Time.timeScale = 1;
         PausePanel.SetActive(false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        StartCoroutine("Load");
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    IEnumerator Load()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(currentScene, LoadSceneMode.Additive);
+        asyncOperation.allowSceneActivation = true;
+        yield return asyncOperation;
+        SceneManager.UnloadSceneAsync(currentScene);
+
     }
     private void Finish()
     {
