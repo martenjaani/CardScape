@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [Header("UI")]
     public TextMeshProUGUI timerText;
     private float startTime;
     private float timerTime;
@@ -19,7 +20,9 @@ public class GameController : MonoBehaviour
     public GameObject FinishPanel;
     public GameObject PausePanel;
     public GameObject SettingsPanel;
+    public GameObject Countdown;
 
+    [Header("Sound")]
     public float MasterVolume = 10.0f;
     public AudioSource RainSound;
     public AudioSource StepsSound;
@@ -34,7 +37,7 @@ public class GameController : MonoBehaviour
     public AudioClipGroup Complete;
     public AudioClipGroup Projectile;
     public AudioClipGroup Grapple;
-    //public AudioClipGroup Click;
+    
 
     public static Action sceneLoaded;
 
@@ -55,15 +58,33 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(CountDownAnim());
+        Events.SetMovementDisabled(true);
         MasterVolume = PlayerPrefs.GetFloat("MasterVolume");
         RainSoundSetVolume = RainSound.volume;
         StepsSoundSetVolume = StepsSound.volume;
         ClickSoundSetVolume = ClickSound.volume;
         SetVolume(MasterVolume);
-        startTime = Time.time;
-        timerStarted = true;
+        //startTime = Time.time;
+        //timerStarted = true;
         FinishPanel.SetActive(false);
         PausePanel.SetActive(false);
+    }
+
+    private IEnumerator CountDownAnim()
+    {
+        int seconds = Countdown.transform.childCount;
+        for (int i = 0; i < seconds; i++) 
+        {
+            Countdown.transform.GetChild(i).gameObject.SetActive(true);
+            if(i == seconds - 1)
+                yield return null;
+            else
+                yield return new WaitForSeconds(1);
+        }
+        Events.SetMovementDisabled(false);
+        startTime = Time.time;
+        timerStarted = true;
     }
 
     void Update()

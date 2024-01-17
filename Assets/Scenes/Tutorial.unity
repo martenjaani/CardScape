@@ -8262,7 +8262,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 116.57628, y: -3.72, z: -10.01}
+  m_LocalPosition: {x: 116.700806, y: -3.72, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -15478,7 +15478,7 @@ Transform:
   m_GameObject: {fileID: 1120209329}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 120.29888, y: -1.7475699, z: -10.01}
+  m_LocalPosition: {x: 121.2949, y: -1.74729, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49210,6 +49210,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1545497008 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4260328644339102902, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+  m_PrefabInstance: {fileID: 1931382336}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1562299854
 GameObject:
   m_ObjectHideFlags: 0
@@ -55723,14 +55728,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 841896586}
-    - target: {fileID: 3338333923330548550, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
-      propertyPath: m_Pitch
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3338333923330548550, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
-      propertyPath: m_Volume
-      value: 0.015
-      objectReference: {fileID: 0}
     - target: {fileID: 3837789674199965440, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: CardPacks.Array.size
       value: 5
@@ -55775,6 +55772,10 @@ PrefabInstance:
       propertyPath: CardPacks.Array.data[4].amountOfCards
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3963555258484537729, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: CountdownAnim
+      value: 
+      objectReference: {fileID: 1545497008}
     - target: {fileID: 5580329177070912913, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: m_Volume
       value: 0.01
