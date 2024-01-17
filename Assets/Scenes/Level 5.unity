@@ -16786,6 +16786,52 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &605399210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 605399212}
+  - component: {fileID: 605399211}
+  m_Layer: 0
+  m_Name: Countdown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &605399211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605399210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09781213626521340b30f0c4f31f1637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HowManySeconds: 0
+  CountDownTextPrefab: {fileID: 9104100201170856581, guid: 87184ef93f29c164fb0c8eb0e8973dd4, type: 3}
+--- !u!4 &605399212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605399210}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1219.4, y: -756.5, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &636986842
 GameObject:
   m_ObjectHideFlags: 0
@@ -19530,6 +19576,10 @@ PrefabInstance:
       propertyPath: CardPacks.Array.data[2].amountOfCards
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3963555258484537729, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: Countdown
+      value: 
+      objectReference: {fileID: 605399210}
     - target: {fileID: 5580329177070912913, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: m_Volume
       value: 0.01
@@ -54073,3 +54123,4 @@ SceneRoots:
   - {fileID: 414395703}
   - {fileID: 740891344}
   - {fileID: 1171454752}
+  - {fileID: 605399212}

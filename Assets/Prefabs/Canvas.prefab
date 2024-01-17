@@ -1923,52 +1923,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4097656142590407972}
   m_CullTransparentMesh: 1
---- !u!1 &4260328644339102902
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7118224679648898816}
-  - component: {fileID: 990001852119694775}
-  m_Layer: 0
-  m_Name: Countdown
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7118224679648898816
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4260328644339102902}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -270.97, y: -223.83, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7311771876905348734}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &990001852119694775
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4260328644339102902}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09781213626521340b30f0c4f31f1637, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HowManySeconds: 0
-  CountDownTextPrefab: {fileID: 9104100201170856581, guid: 87184ef93f29c164fb0c8eb0e8973dd4, type: 3}
 --- !u!1 &4273332360727637105
 GameObject:
   m_ObjectHideFlags: 0
@@ -4713,7 +4667,6 @@ RectTransform:
   - {fileID: 6045617742695424184}
   - {fileID: 3426527441630139967}
   - {fileID: 4282346946955047542}
-  - {fileID: 7118224679648898816}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4762,7 +4715,7 @@ MonoBehaviour:
   FinishPanel: {fileID: 8365989392316890396}
   PausePanel: {fileID: 4560906474788577923}
   SettingsPanel: {fileID: 5458049460165804993}
-  Countdown: {fileID: 4260328644339102902}
+  Countdown: {fileID: 0}
   MasterVolume: 0
   RainSound: {fileID: 5580329177070912913}
   StepsSound: {fileID: 3338333923330548550}

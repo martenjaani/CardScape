@@ -14960,6 +14960,10 @@ PrefabInstance:
       propertyPath: CardPacks.Array.data[3].amountOfCards
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3963555258484537729, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: Countdown
+      value: 
+      objectReference: {fileID: 1037799289}
     - target: {fileID: 5580329177070912913, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: m_Volume
       value: 0.01
@@ -16695,6 +16699,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7847410404094014638, guid: 41830343887dfb74ab4f39c5a211b244, type: 3}
   m_PrefabInstance: {fileID: 12534702}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1037799289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1037799291}
+  - component: {fileID: 1037799290}
+  m_Layer: 0
+  m_Name: Countdown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1037799290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037799289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09781213626521340b30f0c4f31f1637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HowManySeconds: 0
+  CountDownTextPrefab: {fileID: 9104100201170856581, guid: 87184ef93f29c164fb0c8eb0e8973dd4, type: 3}
+--- !u!4 &1037799291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1037799289}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.54, y: -1.38, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1083038325
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35392,3 +35442,4 @@ SceneRoots:
   - {fileID: 4707381586799191519}
   - {fileID: 1083038325}
   - {fileID: 2022697760}
+  - {fileID: 1037799291}

@@ -13402,6 +13402,52 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &968606205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 968606207}
+  - component: {fileID: 968606206}
+  m_Layer: 0
+  m_Name: Countdown
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &968606206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968606205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09781213626521340b30f0c4f31f1637, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HowManySeconds: 0
+  CountDownTextPrefab: {fileID: 9104100201170856581, guid: 87184ef93f29c164fb0c8eb0e8973dd4, type: 3}
+--- !u!4 &968606207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968606205}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 116.127, y: 0.95303345, z: 0}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &991402588
 GameObject:
   m_ObjectHideFlags: 0
@@ -49210,11 +49256,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1545497008 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4260328644339102902, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
-  m_PrefabInstance: {fileID: 1931382336}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1562299854
 GameObject:
   m_ObjectHideFlags: 0
@@ -55773,9 +55814,13 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3963555258484537729, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: Countdown
+      value: 
+      objectReference: {fileID: 968606205}
+    - target: {fileID: 3963555258484537729, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: CountdownAnim
       value: 
-      objectReference: {fileID: 1545497008}
+      objectReference: {fileID: 0}
     - target: {fileID: 5580329177070912913, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: m_Volume
       value: 0.01
@@ -61016,3 +61061,4 @@ SceneRoots:
   - {fileID: 1420807730}
   - {fileID: 277592794}
   - {fileID: 279520902}
+  - {fileID: 968606207}
