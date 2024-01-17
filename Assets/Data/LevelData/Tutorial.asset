@@ -15,4 +15,4 @@ MonoBehaviour:
   LevelName: Tutorial
   SceneName: Tutorial
   BestTime: LOL
-  IconSprite: {fileID: -8629541387890768676, guid: cbe45048b8f55f349925d6cbe98f47c9, type: 3}
+  IconSprite: {fileID: 21300000, guid: a76c7cf52cdbbd14d9c620ec57ded4b5, type: 3}

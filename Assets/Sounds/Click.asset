@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b699ec1b2a7894289c6ef20fc75d3c, type: 3}
   m_Name: Click
   m_EditorClassIdentifier: 
-  VolumeMin: 0.05
-  VolumeMax: 0.05
+  VolumeMin: 0.02
+  VolumeMax: 0.02
   PitchMin: 0.7
   PitchMax: 0.7
   Cooldown: 0.01

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b699ec1b2a7894289c6ef20fc75d3c, type: 3}
   m_Name: Dash
   m_EditorClassIdentifier: 
-  VolumeMin: 0.05
-  VolumeMax: 0.05
+  VolumeMin: 0.03
+  VolumeMax: 0.03
   PitchMin: 1
   PitchMax: 1
   Cooldown: 0.1

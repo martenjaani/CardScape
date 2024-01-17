@@ -8262,7 +8262,7 @@ Transform:
   m_GameObject: {fileID: 700662217}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 116.701164, y: -3.72, z: -10.01}
+  m_LocalPosition: {x: 116.57628, y: -3.72, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8335,6 +8335,10 @@ PrefabInstance:
     - target: {fileID: 6058351766485876328, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7589066707365568872, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
+      value: 0.26415062
       objectReference: {fileID: 0}
     - target: {fileID: 7702145778085762129, guid: 4e03a9a074da3dd408addca1ca87b739, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15474,7 +15478,7 @@ Transform:
   m_GameObject: {fileID: 1120209329}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 121.297745, y: -1.74729, z: -10.01}
+  m_LocalPosition: {x: 120.29888, y: -1.7475699, z: -10.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55711,10 +55715,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1454808409885579260, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: m_Volume
+      value: 0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 2311992884616297947, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 841896586}
+    - target: {fileID: 3338333923330548550, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: m_Volume
+      value: 0.015
+      objectReference: {fileID: 0}
     - target: {fileID: 3837789674199965440, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: CardPacks.Array.size
       value: 5
@@ -55758,6 +55770,10 @@ PrefabInstance:
     - target: {fileID: 3837789674199965440, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: CardPacks.Array.data[4].amountOfCards
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5580329177070912913, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
+      propertyPath: m_Volume
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7311771876905348734, guid: d2d77ed5c6a48fa44b735bfbe820a8f7, type: 3}
       propertyPath: m_Pivot.x

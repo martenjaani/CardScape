@@ -14,6 +14,7 @@ public class Goal : MonoBehaviour
             Events.FinishLevel();    // Sätime mängija surnuks. Death animation lõpus level reset
             player.GetComponent<Rigidbody2D>().simulated = false;
             player.GetComponent<BoxCollider2D>().enabled = false;
+            player.GetComponent<Animator>().SetBool("isRunning", false);
            // player.enabled = false;
 
         }

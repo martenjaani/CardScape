@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelName: Level 2
   SceneName: Level 2
-  BestTime: maybe
-  IconSprite: {fileID: 21300000, guid: a76c7cf52cdbbd14d9c620ec57ded4b5, type: 3}
+  BestTime: 
+  IconSprite: {fileID: 9047439035099588939, guid: cbe45048b8f55f349925d6cbe98f47c9, type: 3}

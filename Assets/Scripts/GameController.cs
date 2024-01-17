@@ -188,9 +188,10 @@ public class GameController : MonoBehaviour
     }
 
     public void onNextLevel()
-    {
+    {   
         ClickSound.Play();
         Time.timeScale = 1;
+        FinishPanel.SetActive(false);
         Events.NextLevel();
     }
 
