@@ -31,9 +31,10 @@ public class PlayerMovement : MonoBehaviour
     public float ultraDashSpeed = 20f;
     private bool isUltraDashing = false;
 
+
     [Header("Wallslide")]
     public float wallSlideSpeed = 2f;
-    public bool isWallSliding = false;
+    [HideInInspector] public bool isWallSliding = false;
 
     [Header("Grapple")]
     //public GrapplingRope grappleRope;
@@ -315,7 +316,7 @@ public class PlayerMovement : MonoBehaviour
                 Vector2 prevPos = this.transform.position;
                 this.transform.position = Vector2.Lerp(this.transform.position, grapplePoint, Time.deltaTime * launchSpeed);       // Doomed shit idk
 
-                RaycastHit2D hit = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size*0.92f, 0f, grapplePoint, 0.1f, Ground);   // Kontrollime, et ei läheks millelegi pihta.
+                RaycastHit2D hit = Physics2D.BoxCast(collider.bounds.center, collider.bounds.size*0.92f, 0f, grapplePoint, 0.05f, Ground);   // Kontrollime, et ei läheks millelegi pihta.
 
                 DrawRope();
 
@@ -388,7 +389,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (cardActivation && !isUltraDashing)
         {
-            Events.PlaySound("Dash");
+            if (isWallSliding) 
+            {
+                facingRight = !facingRight;
+            }
             movementDisabled = true;
             isUltraDashing = true;
             Events.PlaySound("Dash");
@@ -438,6 +442,7 @@ public class PlayerMovement : MonoBehaviour
                 rb.gravityScale = 0;
                 ultraDashCancel(facingRight);       // siin false
             }
+
         } 
     }
 
