@@ -1,2 +1,3 @@
 # CardScape
- game dev project
+Published on itch.io
+https://nixxel.itch.io/cardscape
